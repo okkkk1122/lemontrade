@@ -1,0 +1,33 @@
+<%- include('partials/shell-start') %>
+<h1>وبلاگ</h1>
+<p><a href="/admin/blog/new" class="btn-admin btn-admin-success">+ مقاله جدید</a></p>
+<form method="post" action="/admin/blog/categories" class="admin-inline-form admin-card-item" style="margin:1rem 0">
+      <%- include('partials/csrf-field') %>
+  <input name="name" placeholder="دسته جدید" required />
+  <button class="btn-admin btn-admin-primary">افزودن دسته</button>
+</form>
+<table class="admin-table">
+  <thead><tr><th>عنوان</th><th>وضعیت</th><th>بازدید</th><th></th></tr></thead>
+  <tbody>
+    <% posts.forEach(p => { %>
+      <tr>
+        <td><%= p.title %></td>
+        <td><%= p.status %></td>
+        <td><%= p.views %></td>
+        <td><a href="/admin/blog/<%= p.id %>/edit" class="btn-admin btn-admin-primary">ویرایش</a></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<h2 style="margin-top:2rem;color:#ffd700">نظرات در انتظار</h2>
+<% comments.filter(c => !c.approved).forEach(c => { %>
+  <div class="admin-card-item">
+    <p><strong><%= c.user?.fullName %></strong> روی «<%= c.post?.title %>»</p>
+    <p><%= c.content %></p>
+    <form method="post" action="/admin/blog/comments/<%= c.id %>/approve" style="display:inline">
+  <%- include('partials/csrf-field') %><button class="btn-admin btn-admin-success">تأیید</button></form>
+    <form method="post" action="/admin/blog/comments/<%= c.id %>/reject" style="display:inline">
+  <%- include('partials/csrf-field') %><button class="btn-admin btn-admin-danger">حذف</button></form>
+  </div>
+<% }) %>
+<%- include('partials/shell-end') %>

@@ -1,0 +1,15 @@
+<%- include('../partials/layout-start') %>
+<h1>کیف پول من</h1>
+<div class="card"><div class="stat-counter"><%= formatToman(wallet.balance) %></div></div>
+<form method="post" action="/wallet/deposit" class="card" style="margin:1rem 0">
+      <%- include('../partials/csrf-field') %>
+  <div class="form-group"><label>مبلغ واریز (تومان)</label><input class="form-control" name="amount" type="number" min="10000" required /></div>
+  <button class="btn btn-primary">افزایش موجودی</button>
+</form>
+<h2>تراکنش‌ها</h2>
+<div class="table-wrap"><table><thead><tr><th>تاریخ</th><th>نوع</th><th>مبلغ</th><th>وضعیت</th></tr></thead><tbody>
+<% wallet.transactions.forEach(t => { %>
+  <tr><td><%= new Date(t.createdAt).toLocaleDateString('fa-IR') %></td><td><%= t.type %></td><td><%= formatToman(Math.abs(t.amount)) %></td><td><%= t.status %></td></tr>
+<% }) %>
+</tbody></table></div>
+<%- include('../partials/layout-end') %>

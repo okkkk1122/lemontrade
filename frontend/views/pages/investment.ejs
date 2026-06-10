@@ -1,0 +1,11 @@
+<%- include('../partials/layout-start') %>
+<h1>پنل سرمایه‌گذاری</h1>
+<div class="grid-3">
+  <div class="card"><h3>مانده</h3><div class="stat-counter"><%= formatToman(investment.balance) %></div></div>
+  <div class="card"><h3>سود/ضرر</h3><div style="color:<%= investment.totalPnL >= 0 ? 'var(--secondary)' : 'var(--error)' %>"><%= investment.totalPnL %>%</div></div>
+  <div class="card"><h3>آخرین بروزرسانی</h3><%= new Date(investment.updatedAt).toLocaleDateString('fa-IR') %></div>
+</div>
+<p style="color:var(--text-muted);margin:1rem 0">تغییرات ممکن است ۱ تا ۲ روز تأخیر داشته باشد.</p>
+<form method="post" action="/investment/withdraw" class="card">
+      <%- include('../partials/csrf-field') %><textarea class="form-control" name="description" placeholder="درخواست برداشت"></textarea><button class="btn btn-primary" style="margin-top:0.5rem">ثبت درخواست</button></form>
+<%- include('../partials/layout-end') %>

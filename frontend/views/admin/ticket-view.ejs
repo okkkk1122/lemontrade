@@ -1,0 +1,44 @@
+<%- include('partials/shell-start') %>
+<h1>تیکت: <%= ticket.subject %></h1>
+<p>کاربر: <%= ticket.user.fullName %> (<%= ticket.user.email %>)</p>
+
+<form method="post" action="/admin/tickets/<%= ticket.id %>" class="admin-inline-form admin-card-item">
+  <%- include('partials/csrf-field') %>
+  <select name="status">
+    <% ['OPEN','IN_PROGRESS','ANSWERED','CLOSED'].forEach(s => { %>
+      <option value="<%= s %>" <%= ticket.status === s ? 'selected' : '' %>><%= s %></option>
+    <% }) %>
+  </select>
+  <select name="priority">
+    <% ['LOW','MEDIUM','HIGH'].forEach(p => { %>
+      <option value="<%= p %>" <%= ticket.priority === p ? 'selected' : '' %>><%= p %></option>
+    <% }) %>
+  </select>
+  <input name="category" value="<%= ticket.category %>" />
+  <button class="btn-admin btn-admin-primary">ذخیره وضعیت</button>
+</form>
+
+<div class="admin-card-item" style="margin:1rem 0;max-height:400px;overflow-y:auto">
+  <% ticket.messages.forEach(m => { %>
+    <div style="margin:0.75rem 0;text-align:<%= m.isStaff ? 'left' : 'right' %>">
+      <div style="display:inline-block;padding:0.75rem;background:<%= m.isStaff ? '#1e3a5f' : '#374151' %>;border-radius:8px;max-width:85%">
+        <small><%= m.isStaff ? 'پشتیبان' : 'کاربر' %></small>
+        <p><%= m.content %></p>
+        <% if (m.fileUrl) { %><a href="<%= m.fileUrl %>">فایل ضمیمه</a><% } %>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<form method="post" action="/admin/tickets/<%= ticket.id %>/reply" enctype="multipart/form-data" class="admin-form admin-card-item">
+  <%- include('partials/csrf-field') %>
+  <textarea name="content" placeholder="پاسخ پشتیبان..." required rows="4"></textarea>
+  <input type="file" name="file" />
+  <button class="btn-admin btn-admin-success">ارسال پاسخ</button>
+</form>
+<form method="post" action="/admin/tickets/<%= ticket.id %>/close" style="margin-top:0.5rem">
+  <%- include('partials/csrf-field') %>
+  <button class="btn-admin btn-admin-outline">بستن تیکت</button>
+</form>
+<p style="margin-top:1rem"><a href="/admin/tickets">← لیست تیکت‌ها</a></p>
+<%- include('partials/shell-end') %>

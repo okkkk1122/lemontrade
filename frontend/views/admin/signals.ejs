@@ -1,0 +1,33 @@
+<%- include('partials/shell-start') %>
+<h1>مدیریت سیگنال‌ها</h1>
+<table class="admin-table">
+  <thead><tr><th>استاد</th><th>جفت</th><th>ورود</th><th>وضعیت</th><th>تغییر وضعیت</th><th></th></tr></thead>
+  <tbody>
+    <% signals.forEach(s => { %>
+      <tr>
+        <td><%= s.teacher?.user?.fullName %></td>
+        <td><%= s.pairSymbol %> <%= s.tradeType %></td>
+        <td><%= s.entryPrice %></td>
+        <td><%= s.status %></td>
+        <td>
+          <form method="post" action="/admin/signals/<%= s.id %>/status" class="admin-inline-form">
+  <%- include('partials/csrf-field') %>
+            <select name="status">
+              <% ['ACTIVE','CLOSED','HIT_TP','HIT_SL','SUSPICIOUS'].forEach(st => { %>
+                <option value="<%= st %>" <%= s.status === st ? 'selected' : '' %>><%= st %></option>
+              <% }) %>
+            </select>
+            <button class="btn-admin btn-admin-primary">اعمال</button>
+          </form>
+        </td>
+        <td>
+          <form method="post" action="/admin/signals/<%= s.id %>/delete" onsubmit="return confirm('حذف قطعی؟')">
+  <%- include('partials/csrf-field') %>
+            <button class="btn-admin btn-admin-danger">حذف</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('partials/shell-end') %>

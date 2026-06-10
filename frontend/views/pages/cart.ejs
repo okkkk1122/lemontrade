@@ -1,0 +1,19 @@
+<%- include('../partials/layout-start') %>
+<h1>سبد خرید</h1>
+<% if (typeof query !== 'undefined' && query.error) { %><div class="alert alert-error">خطا در پرداخت</div><% } %>
+<% items.forEach(i => { %>
+  <div class="card" style="margin:0.75rem 0;display:flex;justify-content:space-between;align-items:center">
+    <span><%= i.title %> — <%= formatToman(i.price) %></span>
+    <% if (i.id !== 'sub') { %><form method="post" action="/cart/remove/<%= i.id %>">
+      <%- include('../partials/csrf-field') %>
+      <button class="btn btn-sm btn-danger">حذف</button></form><% } %>
+  </div>
+<% }) %>
+<p style="font-size:1.25rem;margin:1rem 0"><strong>جمع: <%= formatToman(total) %></strong></p>
+<form method="post" action="/cart/checkout">
+      <%- include('../partials/csrf-field') %>
+  <label><input type="radio" name="method" value="zarinpal" checked /> زرین‌پال</label><br/>
+  <label><input type="radio" name="method" value="wallet" /> کیف پول</label>
+  <button class="btn btn-primary" style="margin-top:1rem">تسویه حساب</button>
+</form>
+<%- include('../partials/layout-end') %>

@@ -1,0 +1,15 @@
+<%- include('../partials/layout-start') %>
+<div class="card auth-card" style="max-width:500px;margin:3rem auto;text-align:center">
+  <% if (typeof success !== 'undefined' && success) { %>
+    <h1>✅ ایمیل تأیید شد</h1>
+    <a href="/login" class="btn btn-primary" style="margin-top:1rem">ورود به سایت</a>
+  <% } else if (typeof expired !== 'undefined' && expired) { %>
+    <h1>لینک منقضی شده</h1>
+    <form method="post" action="/verify-email/resend">
+      <%- include('../partials/csrf-field') %><button class="btn btn-primary" style="margin-top:1rem">ارسال مجدد لینک</button></form>
+  <% } else { %>
+    <h1>لینک نامعتبر</h1>
+    <a href="/signup" class="btn btn-outline">ثبت‌نام مجدد</a>
+  <% } %>
+</div>
+<%- include('../partials/layout-end') %>

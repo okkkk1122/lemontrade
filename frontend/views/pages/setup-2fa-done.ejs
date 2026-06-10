@@ -1,0 +1,8 @@
+<%- include('../partials/layout-start') %>
+<div class="card" style="max-width:520px;margin:2rem auto">
+  <h1>۲FA فعال شد</h1>
+  <p class="alert alert-error">این کدهای پشتیبان را در جای امن نگه دارید:</p>
+  <ul><% backupCodes.forEach(c => { %><li><code><%= c %></code></li><% }) %></ul>
+  <a href="/dashboard" class="btn btn-primary">رفتن به داشبورد</a>
+</div>
+<%- include('../partials/layout-end') %>

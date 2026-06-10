@@ -1,0 +1,67 @@
+<%- include('partials/shell-start') %>
+<h1>تنظیمات عمومی</h1>
+
+<form method="post" action="/admin/settings" class="admin-card admin-form" style="padding:1.25rem;margin-top:1rem">
+      <%- include('partials/csrf-field') %>
+  <h2 class="admin-section" style="border:0;margin:0;padding:0">اطلاعات سایت</h2>
+  <label>نام سایت (فارسی)</label>
+  <input name="siteName" value="<%= settings.siteName || 'لیموترید' %>" />
+  <label>نام سایت (انگلیسی)</label>
+  <input name="siteNameEn" value="<%= settings.siteNameEn || 'lemontrade' %>" dir="ltr" style="text-align:left" />
+  <label>توضیحات متا (SEO)</label>
+  <textarea name="metaDescription"><%= settings.metaDescription || '' %></textarea>
+  <label>رنگ اصلی</label>
+  <input name="primaryColor" type="color" value="<%= settings.primaryColor || '#3B82F6' %>" />
+  <label>کپی‌رایت فوتر</label>
+  <input name="footerCopyright" value="<%= settings.footerCopyright || '' %>" />
+
+  <h2 style="margin-top:1.5rem;color:#ffd700">مالی و اشتراک</h2>
+  <label>قیمت اشتراک هفتگی (تومان)</label>
+  <input name="weeklySubscriptionPrice" type="number" value="<%= settings.weeklySubscriptionPrice || 1000000 %>" />
+  <label>قیمت اشتراک ماهانه (تومان)</label>
+  <input name="monthlySubscriptionPrice" type="number" value="<%= settings.monthlySubscriptionPrice || 3500000 %>" />
+
+  <h2 style="margin-top:1.5rem;color:#ffd700">امنیت</h2>
+  <label><input type="checkbox" name="require2FA" value="true" <%= settings.require2FA !== false ? 'checked' : '' %> /> ۲FA اجباری برای سیگنال</label>
+  <label><input type="checkbox" name="captchaEnabled" value="true" <%= settings.captchaEnabled !== false ? 'checked' : '' %> /> کپچا در ثبت‌نام</label>
+  <label>حداکثر تلاش ورود</label>
+  <input name="maxLoginAttempts" type="number" value="<%= settings.maxLoginAttempts || 5 %>" />
+  <label>دقیقه قفل حساب</label>
+  <input name="lockMinutes" type="number" value="<%= settings.lockMinutes || 15 %>" />
+  <label>حداکثر دستگاه</label>
+  <input name="maxDevices" type="number" value="<%= settings.maxDevices || 2 %>" />
+
+  <h2 style="margin-top:1.5rem;color:#ffd700">سیگنال و تم</h2>
+  <label>بروزرسانی خودکار (ثانیه)</label>
+  <input name="signalPollSeconds" type="number" value="<%= settings.signalPollSeconds || 30 %>" />
+  <label><input type="checkbox" name="defaultDark" value="true" <%= settings.defaultDark !== false ? 'checked' : '' %> /> تم تیره پیش‌فرض</label>
+
+  <h2 style="margin-top:1.5rem;color:#ffd700">تماس</h2>
+  <label>ایمیل پشتیبانی</label>
+  <input name="supportEmail" value="<%= settings.supportEmail || '' %>" />
+  <label>تلفن</label>
+  <input name="supportPhone" value="<%= settings.supportPhone || '' %>" />
+  <label>آدرس</label>
+  <input name="supportAddress" value="<%= settings.supportAddress || '' %>" />
+  <label>لینک تلگرام</label>
+  <input name="telegramUrl" value="<%= settings.telegramUrl || '' %>" />
+  <label>لینک اینستاگرام</label>
+  <input name="instagramUrl" value="<%= settings.instagramUrl || '' %>" />
+  <label>لینک یوتیوب</label>
+  <input name="youtubeUrl" value="<%= settings.youtubeUrl || '' %>" />
+
+  <button type="submit" class="btn-admin btn-admin-primary" style="margin-top:1rem">ذخیره تنظیمات</button>
+</form>
+
+<form method="post" action="/admin/settings/stats" class="admin-card admin-form" style="padding:1.25rem;margin-top:1.5rem">
+      <%- include('partials/csrf-field') %>
+  <h2 style="color:#ffd700;margin-bottom:1rem">آمار صفحه اصلی</h2>
+  <div class="admin-form-row">
+    <div><label>کاربران</label><input name="users" type="number" value="<%= stats.users || 0 %>" /></div>
+    <div><label>سیگنال موفق</label><input name="signals" type="number" value="<%= stats.signals || 0 %>" /></div>
+    <div><label>٪ سود</label><input name="profitPercent" type="number" step="0.1" value="<%= stats.profitPercent || 0 %>" /></div>
+    <div><label>جلسات</label><input name="sessions" type="number" value="<%= stats.sessions || 0 %>" /></div>
+  </div>
+  <button type="submit" class="btn-admin btn-admin-success">ذخیره آمار</button>
+</form>
+<%- include('partials/shell-end') %>

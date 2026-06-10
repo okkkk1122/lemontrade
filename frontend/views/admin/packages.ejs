@@ -1,0 +1,26 @@
+<%- include('partials/shell-start') %>
+<h1>پکیج‌های آموزشی</h1>
+<p><a href="/admin/packages/new" class="btn-admin btn-admin-success">+ پکیج جدید</a></p>
+
+<form method="post" action="/admin/packages/categories" class="admin-inline-form admin-card-item" style="margin:1rem 0">
+      <%- include('partials/csrf-field') %>
+  <input name="name" placeholder="نام دسته" required />
+  <input name="slug" placeholder="slug (اختیاری)" />
+  <button class="btn-admin btn-admin-primary">افزودن دسته</button>
+</form>
+
+<table class="admin-table" style="margin-top:1rem">
+  <thead><tr><th>عنوان</th><th>قیمت</th><th>فروش</th><th>وضعیت</th><th></th></tr></thead>
+  <tbody>
+    <% packages.forEach(p => { %>
+      <tr>
+        <td><%= p.title %></td>
+        <td><%= p.price.toLocaleString('fa-IR') %></td>
+        <td><%= p.salesCount %></td>
+        <td><%= p.isActive ? 'فعال' : 'غیرفعال' %></td>
+        <td><a href="/admin/packages/<%= p.id %>/edit" class="btn-admin btn-admin-primary">ویرایش</a></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('partials/shell-end') %>

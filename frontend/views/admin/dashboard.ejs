@@ -1,0 +1,16 @@
+<%- include('partials/shell-start') %>
+<h1>داشبورد مدیریت</h1>
+<div class="grid-4" style="margin:1.5rem 0">
+  <div class="admin-card"><h4>کاربران</h4><div class="stat-counter"><%= stats.userCount %></div><small>+<%= stats.newUsersMonth %> این ماه</small></div>
+  <div class="admin-card"><h4>سیگنال امروز</h4><div class="stat-counter"><%= stats.signalsToday %></div></div>
+  <div class="admin-card"><h4>جلسات ماه</h4><div class="stat-counter"><%= stats.sessionsMonth %></div></div>
+  <div class="admin-card"><h4>درآمد ماه</h4><div class="stat-counter"><%= stats.revenueMonth.toLocaleString('fa-IR') %></div></div>
+</div>
+<div class="admin-card">
+  <h3>هشدارها</h3>
+  <p>اشتراک در حال اتمام: <a href="/admin/subscriptions"><%= stats.expiringSubs %></a></p>
+  <p>تیکت بی‌پاسخ ۲۴h+: <a href="/admin/tickets"><%= stats.openTickets %></a></p>
+</div>
+<h3 style="margin-top:1.5rem">آخرین فعالیت</h3>
+<% logs.forEach(l => { %><p><%= l.admin?.fullName %> — <%= l.action %> — <%= new Date(l.createdAt).toLocaleString('fa-IR') %></p><% }) %>
+<%- include('partials/shell-end') %>

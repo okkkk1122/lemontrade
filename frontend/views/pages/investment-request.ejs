@@ -1,0 +1,9 @@
+<%- include('../partials/layout-start') %>
+<h1>صندوق سرمایه‌گذاری</h1>
+<p>سرمایه‌گذاری خارج از درگاه سایت انجام می‌شود. درخواست خود را ثبت کنید:</p>
+<form method="post" action="/investment/request" class="card" style="max-width:400px">
+      <%- include('../partials/csrf-field') %>
+  <div class="form-group"><label>مبلغ تقریبی (تومان)</label><input class="form-control" name="amount" type="number" required /></div>
+  <button class="btn btn-primary">ثبت درخواست</button>
+</form>
+<%- include('../partials/layout-end') %>

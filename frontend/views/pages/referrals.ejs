@@ -1,0 +1,15 @@
+<%- include('../partials/layout-start') %>
+<h1>معرفی دوستان</h1>
+<div class="card">
+  <p>لینک معرفی:</p>
+  <code style="word-break:break-all"><%= link %></code>
+  <button class="btn btn-sm btn-primary" data-copy="<%= link %>" style="margin-top:0.5rem">کپی لینک</button>
+</div>
+<% levels.forEach((lv, i) => { const need = lv.count || [3,6,10][i]; const cur = Math.min(qualified, need); %>
+  <div class="card" style="margin:1rem 0">
+    <h3>سطح <%= lv.level || i+1 %>: <%= cur %>/<%= need %></h3>
+    <div class="progress-bar"><span style="width:<%= (cur/need*100) %>%"></span></div>
+    <p>پاداش: <%= lv.reward %></p>
+  </div>
+<% }) %>
+<%- include('../partials/layout-end') %>

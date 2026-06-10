@@ -1,0 +1,9 @@
+<%- include('../partials/layout-start') %>
+<h1>تاریخچه سیگنال‌ها</h1>
+<form method="get" style="margin:1rem 0"><select name="result" class="form-control" style="max-width:200px;display:inline-block">
+  <option value="">همه</option><option value="profit">سودده</option><option value="loss">ضررده</option>
+</select> <button class="btn btn-sm btn-primary">فیلتر</button></form>
+<div class="table-wrap"><table><thead><tr><th>جفت</th><th>وضعیت</th><th>ورود</th><th>زمان</th><th></th></tr></thead><tbody>
+<% signals.forEach(s => { %><tr><td><%= s.pairSymbol %></td><td><%= s.status %></td><td><%= s.entryPrice %></td><td><%= s.timeAgo %></td><td><a href="/signals/<%= s.id %>">جزئیات</a></td></tr><% }) %>
+</tbody></table></div>
+<%- include('../partials/layout-end') %>

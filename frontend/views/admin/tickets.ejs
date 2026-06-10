@@ -1,0 +1,17 @@
+<%- include('partials/shell-start') %>
+<h1>تیکت‌های پشتیبانی</h1>
+<table class="admin-table">
+  <thead><tr><th>کاربر</th><th>موضوع</th><th>اولویت</th><th>وضعیت</th><th></th></tr></thead>
+  <tbody>
+    <% tickets.forEach(t => { %>
+      <tr>
+        <td><%= t.user.fullName %></td>
+        <td><%= t.subject %></td>
+        <td><%= t.priority %></td>
+        <td><%= t.status %></td>
+        <td><a href="/admin/tickets/<%= t.id %>" class="btn-admin btn-admin-primary">پاسخ / ویرایش</a></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('partials/shell-end') %>

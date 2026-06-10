@@ -1,0 +1,42 @@
+<%- include('partials/shell-start') %>
+<h1>اشتراک و مالی</h1>
+
+<form method="post" action="/admin/subscriptions" class="admin-card admin-form" style="padding:1.25rem;margin-bottom:1.5rem">
+      <%- include('partials/csrf-field') %>
+  <h2 style="color:#ffd700">اعطای اشتراک دستی</h2>
+  <label>کاربر</label>
+  <select name="userId" required>
+    <% users.forEach(u => { %>
+      <option value="<%= u.id %>"><%= u.fullName %> — <%= u.email %></option>
+    <% }) %>
+  </select>
+  <label>تعداد روز</label>
+  <input name="days" type="number" value="7" />
+  <label>مبلغ ثبت‌شده (تومان)</label>
+  <input name="amount" type="number" value="1000000" />
+  <button class="btn-admin btn-admin-success">ثبت اشتراک</button>
+</form>
+
+<table class="admin-table">
+  <thead><tr><th>کاربر</th><th>شروع</th><th>پایان</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead>
+  <tbody>
+    <% subs.forEach(s => { %>
+      <tr>
+        <td><%= s.user.fullName %></td>
+        <td><%= new Date(s.startDate).toLocaleDateString('fa-IR') %></td>
+        <td><%= new Date(s.endDate).toLocaleDateString('fa-IR') %></td>
+        <td><%= s.amount.toLocaleString('fa-IR') %></td>
+        <td><%= s.status %></td>
+        <td>
+          <% if (s.status === 'ACTIVE') { %>
+            <form method="post" action="/admin/subscriptions/<%= s.id %>/cancel">
+  <%- include('partials/csrf-field') %>
+              <button class="btn-admin btn-admin-danger">لغو</button>
+            </form>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('partials/shell-end') %>

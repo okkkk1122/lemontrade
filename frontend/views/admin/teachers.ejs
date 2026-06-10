@@ -1,0 +1,29 @@
+<%- include('partials/shell-start') %>
+<h1>مدیریت اساتید</h1>
+<% teachers.forEach(t => { %>
+  <div class="admin-card-item">
+    <h3><%= t.user.fullName %> — ⭐ <%= t.rating %> — <%= t.isApproved ? 'تأیید شده' : 'در انتظار' %></h3>
+    <% if (!t.isApproved) { %>
+      <form method="post" action="/admin/teachers/<%= t.id %>/approve" style="display:inline">
+  <%- include('partials/csrf-field') %>
+        <button class="btn-admin btn-admin-success">تأیید استادی</button>
+      </form>
+    <% } %>
+    <form method="post" action="/admin/teachers/<%= t.id %>" class="admin-form" style="margin-top:0.75rem">
+  <%- include('partials/csrf-field') %>
+      <textarea name="bio" placeholder="بیوگرافی"><%= t.bio || '' %></textarea>
+      <div class="admin-form-row">
+        <div><label>امتیاز</label><input name="rating" type="number" step="0.1" value="<%= t.rating %>" /></div>
+        <div><label>٪ موفقیت</label><input name="successRate" type="number" step="0.1" value="<%= t.successRate %>" /></div>
+      </div>
+      <label><input type="checkbox" name="isActive" value="true" <%= t.isActive ? 'checked' : '' %> /> فعال</label>
+      <label><input type="checkbox" name="isApproved" value="true" <%= t.isApproved ? 'checked' : '' %> /> تأیید شده</label>
+      <button class="btn-admin btn-admin-primary">ذخیره</button>
+    </form>
+    <form method="post" action="/admin/teachers/<%= t.id %>/deactivate" style="margin-top:0.5rem">
+  <%- include('partials/csrf-field') %>
+      <button class="btn-admin btn-admin-danger">غیرفعال موقت</button>
+    </form>
+  </div>
+<% }) %>
+<%- include('partials/shell-end') %>

@@ -1,0 +1,8 @@
+<% const iconSrc = typeof resolveSocialIconSrc === 'function' ? resolveSocialIconSrc(link) : null; %>
+<a href="<%= link.url %>" class="social-icon-link" title="<%= link.platform %>" target="_blank" rel="noopener noreferrer">
+  <% if (iconSrc) { %>
+    <img src="<%= iconSrc %>" alt="<%= link.platform %>" width="20" height="20" loading="lazy" decoding="async" />
+  <% } else { %>
+    <span class="social-icon-fallback"><%= link.icon || link.platform.slice(0, 2) %></span>
+  <% } %>
+</a>

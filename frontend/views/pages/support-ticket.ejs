@@ -1,0 +1,21 @@
+<%- include('../partials/layout-start') %>
+<h1><%= ticket.subject %></h1>
+<div class="card" style="margin:1rem 0;max-height:400px;overflow-y:auto">
+  <% ticket.messages.forEach(m => { %>
+    <div style="margin:0.75rem 0;text-align:<%= m.isStaff ? 'left' : 'right' %>">
+      <div class="card" style="display:inline-block;max-width:80%;background:<%= m.isStaff ? 'var(--bg)' : 'var(--primary)' %>;color:<%= m.isStaff ? 'inherit' : '#fff' %>">
+        <%= m.content %>
+      </div>
+    </div>
+  <% }) %>
+</div>
+<form method="post" action="/support/<%= ticket.id %>/reply">
+  <%- include('../partials/csrf-field') %>
+  <textarea class="form-control" name="content" required></textarea>
+  <button class="btn btn-primary" style="margin-top:0.5rem">پاسخ</button>
+</form>
+<form method="post" action="/support/<%= ticket.id %>/close" style="margin-top:0.5rem">
+  <%- include('../partials/csrf-field') %>
+  <button class="btn btn-outline btn-sm">بستن تیکت</button>
+</form>
+<%- include('../partials/layout-end') %>

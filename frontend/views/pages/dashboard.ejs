@@ -1,0 +1,43 @@
+<%- include('../partials/layout-start') %>
+<h1>سلام <%= user.fullName %>! 👋</h1>
+<div class="grid-3" style="margin-top:1.5rem">
+  <div class="card <%= subWarning ? 'alert-error' : '' %>">
+    <h3>اشتراک</h3>
+    <% if (activeSub) { %>
+      <p>فعال تا <%= new Date(activeSub.endDate).toLocaleDateString('fa-IR') %></p>
+      <% if (subWarning) { %><p style="color:var(--error)">کمتر از ۲ روز مانده!</p><% } %>
+      <a href="/cart" class="btn btn-sm btn-primary">تمدید</a>
+    <% } else { %>
+      <p>غیرفعال</p><a href="/cart" class="btn btn-sm btn-primary">خرید اشتراک</a>
+    <% } %>
+  </div>
+  <div class="card">
+    <h3>آموزش ۷ مرحله</h3>
+    <div class="progress-bar"><span style="width:<%= sevenTotal ? (stepProgress7/sevenTotal*100) : 0 %>%"></span></div>
+    <a href="/learn/zero-to-hundred" class="btn btn-sm btn-outline" style="margin-top:0.5rem">ادامه</a>
+  </div>
+  <div class="card">
+    <h3>متاتریدر ۱۰ مرحله</h3>
+    <div class="progress-bar"><span style="width:<%= tenTotal ? (stepProgress10/tenTotal*100) : 0 %>%"></span></div>
+    <a href="/learn/metatrader" class="btn btn-sm btn-outline" style="margin-top:0.5rem">ادامه</a>
+  </div>
+  <div class="card">
+    <h3>کیف پول</h3>
+    <p><%= typeof formatToman === 'function' ? formatToman(wallet?.balance || 0) : wallet?.balance %></p>
+    <a href="/wallet" class="btn btn-sm btn-outline">تراکنش‌ها</a>
+  </div>
+  <div class="card">
+    <h3>معرفی</h3>
+    <p><%= referralCount %> معرفی موفق</p>
+    <a href="/referrals" class="btn btn-sm btn-outline">جزئیات</a>
+  </div>
+</div>
+<h2 class="section-title">آخرین سیگنال‌های دیده شده</h2>
+<% recentViews.forEach(v => { %>
+  <a href="/signals/<%= v.signal.id %>" class="card" style="display:block;margin-bottom:0.5rem"><%= v.signal.pairSymbol %> — <%= v.signal.teacher?.user?.fullName %></a>
+<% }) %>
+<h2 class="section-title">اعلان‌ها</h2>
+<% notifications.forEach(n => { %>
+  <div class="card" style="margin-bottom:0.5rem"><strong><%= n.notification.title %></strong><p><%= n.notification.body %></p></div>
+<% }) %>
+<%- include('../partials/layout-end') %>

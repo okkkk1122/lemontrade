@@ -1,0 +1,41 @@
+<%- include('partials/shell-start') %>
+<h1><%= post ? 'ویرایش مقاله' : 'مقاله جدید' %></h1>
+<form method="post" action="<%= post ? '/admin/blog/'+post.id : '/admin/blog' %>" enctype="multipart/form-data" class="admin-card admin-form" style="padding:1.25rem;margin-top:1rem">
+  <%- include('partials/csrf-field') %>
+  <label>عنوان</label>
+  <input name="title" value="<%= post?.title || '' %>" required />
+  <label>Slug</label>
+  <input name="slug" value="<%= post?.slug || '' %>" />
+  <label>خلاصه</label>
+  <textarea name="excerpt"><%= post?.excerpt || '' %></textarea>
+  <label>متن کامل (HTML)</label>
+  <textarea name="content" rows="12" required><%= post?.content || '' %></textarea>
+  <label>نویسنده</label>
+  <input name="authorName" value="<%= post?.authorName || '' %>" />
+  <label>دسته</label>
+  <select name="categoryId">
+    <option value="">—</option>
+    <% categories.forEach(c => { %>
+      <option value="<%= c.id %>" <%= post?.categoryId === c.id ? 'selected' : '' %>><%= c.name %></option>
+    <% }) %>
+  </select>
+  <label>وضعیت</label>
+  <select name="status">
+    <option value="published" <%= post?.status === 'published' ? 'selected' : '' %>>منتشر شده</option>
+    <option value="draft" <%= post?.status === 'draft' ? 'selected' : '' %>>پیش‌نویس</option>
+  </select>
+  <label>تگ‌ها (با کاما)</label>
+  <input name="tags" value="<%= (post?.tags || []).join(', ') %>" />
+  <label>تصویر شاخص URL</label>
+  <input name="coverImage" value="<%= post?.coverImage || '' %>" />
+  <input type="file" name="cover" accept="image/*" />
+  <button class="btn-admin btn-admin-primary">ذخیره مقاله</button>
+</form>
+<% if (post) { %>
+  <form method="post" action="/admin/blog/<%= post.id %>/delete" style="margin-top:1rem" onsubmit="return confirm('پیش‌نویس شود؟')">
+  <%- include('partials/csrf-field') %>
+    <button class="btn-admin btn-admin-danger">حذف از انتشار</button>
+  </form>
+<% } %>
+<p style="margin-top:1rem"><a href="/admin/blog">← بازگشت</a></p>
+<%- include('partials/shell-end') %>

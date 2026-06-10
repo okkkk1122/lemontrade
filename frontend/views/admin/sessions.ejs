@@ -1,0 +1,56 @@
+<%- include('partials/shell-start') %>
+<h1>جلسات زنده</h1>
+
+<form method="post" action="/admin/sessions" class="admin-card admin-form" style="padding:1.25rem;margin-bottom:1.5rem">
+      <%- include('partials/csrf-field') %>
+  <h2 style="color:#ffd700">جلسه جدید</h2>
+  <input name="title" placeholder="عنوان" required />
+  <label>استاد</label>
+  <select name="teacherId" required>
+    <% teachers.forEach(t => { %><option value="<%= t.id %>"><%= t.user.fullName %></option><% }) %>
+  </select>
+  <label>تاریخ و ساعت شروع</label>
+  <input name="startAt" type="datetime-local" required />
+  <div class="admin-form-row">
+    <input name="durationMin" type="number" value="60" placeholder="مدت (دقیقه)" />
+    <input name="maxAttendees" type="number" placeholder="حداکثر شرکت‌کننده" />
+  </div>
+  <input name="roomLink" placeholder="لینک اتاق (خالی = خودکار)" />
+  <select name="status"><option value="scheduled">برنامه‌ریزی</option><option value="live">در حال برگزاری</option></select>
+  <button class="btn-admin btn-admin-success">ایجاد جلسه</button>
+</form>
+
+<% sessions.forEach(s => { %>
+  <div class="admin-card-item">
+    <form method="post" action="/admin/sessions/<%= s.id %>" class="admin-form">
+  <%- include('partials/csrf-field') %>
+      <strong><%= s.title %></strong>
+      <select name="teacherId">
+        <% teachers.forEach(t => { %>
+          <option value="<%= t.id %>" <%= s.teacherId === t.id ? 'selected' : '' %>><%= t.user.fullName %></option>
+        <% }) %>
+      </select>
+      <input name="startAt" type="datetime-local" value="<%= new Date(s.startAt).toISOString().slice(0,16) %>" />
+      <input name="durationMin" type="number" value="<%= s.durationMin %>" />
+      <input name="roomLink" value="<%= s.roomLink || '' %>" />
+      <select name="status">
+        <option value="scheduled" <%= s.status==='scheduled'?'selected':'' %>>scheduled</option>
+        <option value="live" <%= s.status==='live'?'selected':'' %>>live</option>
+        <option value="cancelled" <%= s.status==='cancelled'?'selected':'' %>>cancelled</option>
+        <option value="ended" <%= s.status==='ended'?'selected':'' %>>ended</option>
+      </select>
+      <button class="btn-admin btn-admin-primary">ذخیره</button>
+    </form>
+    <form method="post" action="/admin/sessions/<%= s.id %>/recording" enctype="multipart/form-data" class="admin-form" style="margin-top:0.5rem">
+  <%- include('partials/csrf-field') %>
+      <input name="recordingUrl" value="<%= s.recordingUrl || '' %>" placeholder="لینک ضبط" />
+      <input type="file" name="recording" />
+      <button class="btn-admin btn-admin-outline">آپلود/ذخیره ضبط</button>
+    </form>
+    <% if (s.status !== 'cancelled') { %>
+      <form method="post" action="/admin/sessions/<%= s.id %>/cancel">
+  <%- include('partials/csrf-field') %><button class="btn-admin btn-admin-danger">لغو جلسه</button></form>
+    <% } %>
+  </div>
+<% }) %>
+<%- include('partials/shell-end') %>

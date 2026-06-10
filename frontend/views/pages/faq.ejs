@@ -1,0 +1,11 @@
+<%- include('../partials/layout-start') %>
+<h1>سوالات متداول</h1>
+<form method="get" style="margin:1rem 0"><input class="form-control" name="q" value="<%= q %>" placeholder="جستجو..." /></form>
+<% categories.forEach(cat => { %>
+  <h2 class="section-title"><%= cat.name %></h2>
+  <% cat.faqs.forEach(f => { %>
+    <details class="card" style="margin-bottom:0.5rem"><summary><%= f.question %></summary><p style="margin-top:0.5rem"><%= f.answer %></p></details>
+  <% }) %>
+<% }) %>
+<a href="/support" class="btn btn-primary" style="margin-top:1rem">پرسش جدید (تیکت)</a>
+<%- include('../partials/layout-end') %>

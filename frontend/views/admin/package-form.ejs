@@ -1,0 +1,59 @@
+<%- include('partials/shell-start') %>
+<h1><%= pkg ? 'ویرایش پکیج' : 'پکیج جدید' %></h1>
+<form method="post" action="<%= pkg ? '/admin/packages/'+pkg.id : '/admin/packages' %>" enctype="multipart/form-data" class="admin-card admin-form" style="padding:1.25rem;margin-top:1rem">
+  <%- include('partials/csrf-field') %>
+  <label>عنوان</label>
+  <input name="title" value="<%= pkg?.title || '' %>" required />
+  <% if (pkg) { %><label>Slug</label><input name="slug" value="<%= pkg.slug %>" /><% } %>
+  <label>توضیح کوتاه</label>
+  <input name="shortDesc" value="<%= pkg?.shortDesc || '' %>" />
+  <label>توضیح کامل (HTML)</label>
+  <textarea name="fullDesc" rows="6"><%= pkg?.fullDesc || '' %></textarea>
+  <label>قیمت (تومان)</label>
+  <input name="price" type="number" value="<%= pkg?.price || 0 %>" required />
+  <label>٪ تخفیف</label>
+  <input name="discountPercent" type="number" value="<%= pkg?.discountPercent || '' %>" />
+  <label>دسته</label>
+  <select name="categoryId">
+    <option value="">—</option>
+    <% categories.forEach(c => { %>
+      <option value="<%= c.id %>" <%= pkg?.categoryId === c.id ? 'selected' : '' %>><%= c.name %></option>
+    <% }) %>
+  </select>
+  <label>تصویر جلد URL</label>
+  <input name="coverImageUrl" value="<%= pkg?.coverImageUrl || '' %>" />
+  <input type="file" name="cover" accept="image/*" />
+  <label>سرفصل‌ها (هر خط: عنوان|توضیح)</label>
+  <textarea name="syllabus" rows="4"><% if (pkg?.syllabus) { %><%= JSON.stringify(pkg.syllabus, null, 0).replace(/^\[|\]$/g,'').replace(/"\},/g,'\n').replace(/[{}"]/g,'') %><% } %></textarea>
+  <label><input type="checkbox" name="isActive" value="true" <%= !pkg || pkg.isActive ? 'checked' : '' %> /> فعال</label>
+  <button class="btn-admin btn-admin-primary">ذخیره پکیج</button>
+</form>
+
+<% if (pkg) { %>
+  <h2 style="margin-top:2rem;color:#ffd700">جلسات پکیج</h2>
+  <% (pkg.lessons || []).forEach((l, i) => { %>
+    <form method="post" action="/admin/packages/lessons/<%= l.id %>" class="admin-card-item admin-form">
+  <%- include('partials/csrf-field') %>
+      <strong>جلسه <%= i+1 %></strong>
+      <input name="title" value="<%= l.title %>" />
+      <input name="videoUrl" value="<%= l.videoUrl || '' %>" placeholder="ویدیو" />
+      <input name="fileUrl" value="<%= l.fileUrl || '' %>" placeholder="فایل" />
+      <input name="sortOrder" type="number" value="<%= l.sortOrder %>" />
+      <button class="btn-admin btn-admin-primary">ذخیره</button>
+    </form>
+    <form method="post" action="/admin/packages/lessons/<%= l.id %>/delete">
+  <%- include('partials/csrf-field') %><button class="btn-admin btn-admin-danger">حذف جلسه</button></form>
+  <% }) %>
+  <form method="post" action="/admin/packages/<%= pkg.id %>/lessons" class="admin-form admin-card-item">
+  <%- include('partials/csrf-field') %>
+    <input name="title" placeholder="عنوان جلسه جدید" required />
+    <input name="videoUrl" placeholder="لینک ویدیو" />
+    <button class="btn-admin btn-admin-success">افزودن جلسه</button>
+  </form>
+  <form method="post" action="/admin/packages/<%= pkg.id %>/delete" style="margin-top:2rem" onsubmit="return confirm('غیرفعال شود؟')">
+  <%- include('partials/csrf-field') %>
+    <button class="btn-admin btn-admin-danger">غیرفعال کردن پکیج</button>
+  </form>
+<% } %>
+<p style="margin-top:1rem"><a href="/admin/packages">← لیست پکیج‌ها</a></p>
+<%- include('partials/shell-end') %>

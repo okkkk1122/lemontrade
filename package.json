@@ -1,0 +1,13 @@
+{
+  "name": "limootrade",
+  "private": true,
+  "scripts": {
+    "test:all": "node scripts/run-all-tests.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "postinstall": "playwright install chromium || true"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  }
+}

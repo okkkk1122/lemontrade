@@ -1,0 +1,32 @@
+<%- include('partials/shell-start') %>
+<h1>صندوق سرمایه‌گذاری</h1>
+
+<h2 style="color:#ffd700;margin-top:1rem">درخواست‌های در انتظار</h2>
+<% requests.filter(r => r.status === 'pending').forEach(r => { %>
+  <div class="admin-card-item">
+    <p><strong><%= r.user?.fullName || r.userId %></strong> — <%= (r.amount||0).toLocaleString('fa-IR') %> تومان</p>
+    <form method="post" action="/admin/investments/approve/<%= r.userId %>" style="display:inline">
+  <%- include('partials/csrf-field') %>
+      <button class="btn-admin btn-admin-success">تأیید</button>
+    </form>
+    <form method="post" action="/admin/investments/reject/<%= r.userId %>" style="display:inline" class="admin-inline-form">
+  <%- include('partials/csrf-field') %>
+      <input name="reason" placeholder="دلیل رد" />
+      <button class="btn-admin btn-admin-danger">رد</button>
+    </form>
+  </div>
+<% }) %>
+
+<h2 style="color:#ffd700;margin-top:2rem">سرمایه‌گذاران</h2>
+<% investors.forEach(inv => { %>
+  <div class="admin-card-item">
+    <p><strong><%= inv.user?.fullName %></strong> — مانده: <%= (inv.balance||0).toLocaleString('fa-IR') %> — <%= inv.isApproved ? 'تأیید' : '—' %></p>
+    <form method="post" action="/admin/investments/<%= inv.userId %>/balance" class="admin-inline-form">
+  <%- include('partials/csrf-field') %>
+      <input name="balance" type="number" value="<%= inv.balance %>" placeholder="مانده جدید" />
+      <input name="note" placeholder="یادداشت" />
+      <button class="btn-admin btn-admin-primary">بروزرسانی مانده</button>
+    </form>
+  </div>
+<% }) %>
+<%- include('partials/shell-end') %>

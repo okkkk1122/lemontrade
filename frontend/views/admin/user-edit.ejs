@@ -1,0 +1,43 @@
+<%- include('partials/shell-start') %>
+<h1>ویرایش: <%= user.fullName %></h1>
+<form method="post" action="/admin/users/<%= user.id %>" class="admin-card admin-form" style="padding:1.25rem;margin-top:1rem">
+  <%- include('partials/csrf-field') %>
+  <label>نام کامل</label>
+  <input name="fullName" value="<%= user.fullName %>" required />
+  <label>موبایل</label>
+  <input name="mobile" value="<%= user.mobile %>" />
+  <label>ایمیل (فقط نمایش)</label>
+  <input value="<%= user.email %>" disabled />
+  <label>نقش</label>
+  <select name="role">
+    <% ['USER','TEACHER','ADMIN','FINANCE_ADMIN','CONTENT_ADMIN','SUPPORT_ADMIN'].forEach(r => { %>
+      <option value="<%= r %>" <%= user.role === r ? 'selected' : '' %>><%= r %></option>
+    <% }) %>
+  </select>
+  <label>موجودی کیف پول (تومان)</label>
+  <input name="walletBalance" type="number" value="<%= user.wallet?.balance || 0 %>" />
+  <label>رمز جدید (اختیاری، حداقل ۸ کاراکتر)</label>
+  <input name="newPassword" type="password" />
+  <label><input type="checkbox" name="emailVerified" value="true" <%= user.emailVerified ? 'checked' : '' %> /> ایمیل تأیید شده</label>
+  <label><input type="checkbox" name="isBlocked" value="true" <%= user.isBlocked ? 'checked' : '' %> /> مسدود</label>
+  <button class="btn-admin btn-admin-primary">ذخیره کاربر</button>
+</form>
+
+<form method="post" action="/admin/users/<%= user.id %>/subscription" class="admin-card admin-form" style="padding:1.25rem;margin-top:1rem">
+  <%- include('partials/csrf-field') %>
+  <h2 style="color:#ffd700">افزودن اشتراک دستی</h2>
+  <label>تعداد روز</label>
+  <input name="days" type="number" value="7" />
+  <label>مبلغ (تومان)</label>
+  <input name="amount" type="number" value="0" />
+  <button class="btn-admin btn-admin-success">اعطای اشتراک</button>
+</form>
+
+<h2 style="margin-top:1.5rem">تاریخچه اشتراک</h2>
+<table class="admin-table">
+  <% user.subscriptions.forEach(s => { %>
+    <tr><td><%= new Date(s.startDate).toLocaleDateString('fa-IR') %></td><td><%= new Date(s.endDate).toLocaleDateString('fa-IR') %></td><td><%= s.status %></td><td><%= s.amount %></td></tr>
+  <% }) %>
+</table>
+<p style="margin-top:1rem"><a href="/admin/users" class="btn-admin btn-admin-outline">← بازگشت</a></p>
+<%- include('partials/shell-end') %>

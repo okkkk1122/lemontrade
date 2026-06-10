@@ -1,0 +1,28 @@
+<%- include('../partials/layout-start') %>
+<h1>تماس با ما</h1>
+<% if (typeof sent !== 'undefined' && sent) { %><div class="alert alert-success">پیام شما ارسال شد.</div><% } %>
+<div class="grid-3">
+  <form method="post" class="card" style="grid-column:span 2">
+      <%- include('../partials/csrf-field') %>
+    <div class="form-group"><label>نام</label><input class="form-control" name="name" required /></div>
+    <div class="form-group"><label>ایمیل</label><input class="form-control" type="email" name="email" required /></div>
+    <div class="form-group"><label>موضوع</label><input class="form-control" name="subject" required /></div>
+    <div class="form-group"><label>پیام</label><textarea class="form-control" name="message" rows="5" required></textarea></div>
+    <button class="btn btn-primary">ارسال</button>
+  </form>
+  <div class="card">
+    <p>📧 <%= contactEmail %></p>
+    <p>📞 <a href="tel:+982191000000">۰۲۱-۹۱۰۰۰۰۰۰</a></p>
+    <% socials.forEach(s => {
+      const iconSrc = typeof resolveSocialIconSrc === 'function' ? resolveSocialIconSrc(s) : null;
+    %>
+      <p class="contact-social">
+        <a href="<%= s.url %>" target="_blank" rel="noopener noreferrer" class="contact-social-link">
+          <% if (iconSrc) { %><img src="<%= iconSrc %>" alt="" width="18" height="18" /><% } %>
+          <span><%= s.platform %></span>
+        </a>
+      </p>
+    <% }) %>
+  </div>
+</div>
+<%- include('../partials/layout-end') %>

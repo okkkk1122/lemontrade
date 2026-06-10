@@ -1,0 +1,9 @@
+<%- include('../partials/layout-start') %>
+<article>
+  <h1><%= post.title %></h1>
+  <p style="color:var(--text-muted)"><%= post.authorName %> · <%= new Date(post.publishedAt).toLocaleDateString('fa-IR') %></p>
+  <div class="card" style="margin:1.5rem 0"><%- post.content %></div>
+</article>
+<h2>مقالات مرتبط</h2>
+<div class="grid-3"><% related.forEach(r => { %><a href="/blog/<%= r.slug %>" class="card"><%= r.title %></a><% }) %></div>
+<%- include('../partials/layout-end') %>

@@ -1,0 +1,226 @@
+<%- include('partials/shell-start') %>
+<h1>مدیریت محتوا</h1>
+
+<section class="admin-section">
+  <h2>اسلایدر صفحه اصلی</h2>
+  <% sliders.forEach(s => { %>
+    <div class="admin-card-item">
+      <form method="post" action="/admin/content/sliders/<%= s.id %>" enctype="multipart/form-data" class="admin-form">
+  <%- include('partials/csrf-field') %>
+        <div class="admin-form-row">
+          <div><label>عنوان</label><input name="title" value="<%= s.title %>" required /></div>
+          <div><label>زیرنویس</label><input name="subtitle" value="<%= s.subtitle || '' %>" /></div>
+          <div><label>ترتیب</label><input name="sortOrder" type="number" value="<%= s.sortOrder %>" /></div>
+        </div>
+        <label>متن دکمه / لینک</label>
+        <div class="admin-form-row">
+          <input name="buttonText" value="<%= s.buttonText || '' %>" placeholder="متن دکمه" />
+          <input name="buttonLink" value="<%= s.buttonLink || '' %>" placeholder="لینک" />
+        </div>
+        <label>تصویر (URL یا آپلود)</label>
+        <input name="imageUrl" value="<%= s.imageUrl || '' %>" />
+        <input type="file" name="image" accept="image/*" />
+        <label><input type="checkbox" name="isActive" value="true" <%= s.isActive ? 'checked' : '' %> /> فعال</label>
+        <button class="btn-admin btn-admin-primary">ذخیره</button>
+      </form>
+      <form method="post" action="/admin/content/sliders/<%= s.id %>/delete" style="margin-top:0.5rem" onsubmit="return confirm('حذف؟')">
+  <%- include('partials/csrf-field') %>
+        <button class="btn-admin btn-admin-danger">حذف اسلاید</button>
+      </form>
+    </div>
+  <% }) %>
+  <div class="admin-card-item">
+    <h3>اسلاید جدید</h3>
+    <form method="post" action="/admin/content/sliders" enctype="multipart/form-data" class="admin-form">
+      <%- include('partials/csrf-field') %>
+      <input name="title" placeholder="عنوان" required />
+      <input name="subtitle" placeholder="زیرنویس" />
+      <input name="buttonText" placeholder="متن دکمه" />
+      <input name="buttonLink" placeholder="لینک دکمه" />
+      <input name="imageUrl" placeholder="URL تصویر" />
+      <input type="file" name="image" accept="image/*" />
+      <input name="sortOrder" type="number" value="0" />
+      <button class="btn-admin btn-admin-success">افزودن اسلاید</button>
+    </form>
+  </div>
+</section>
+
+<section class="admin-section">
+  <h2>کارت‌های صفحه اصلی</h2>
+  <% cards.forEach(c => { %>
+    <form method="post" action="/admin/content/cards/<%= c.id %>" class="admin-card-item admin-form">
+  <%- include('partials/csrf-field') %>
+      <div class="admin-form-row">
+        <input name="title" value="<%= c.title %>" />
+        <input name="buttonText" value="<%= c.buttonText || '' %>" placeholder="دکمه" />
+        <input name="buttonLink" value="<%= c.buttonLink || '' %>" placeholder="لینک" />
+        <input name="sortOrder" type="number" value="<%= c.sortOrder %>" />
+      </div>
+      <textarea name="description"><%= c.description || '' %></textarea>
+      <label><input type="checkbox" name="isActive" value="true" <%= c.isActive ? 'checked' : '' %> /> فعال</label>
+      <button class="btn-admin btn-admin-primary">ذخیره</button>
+    </form>
+    <form method="post" action="/admin/content/cards/<%= c.id %>/delete" onsubmit="return confirm('حذف؟')">
+  <%- include('partials/csrf-field') %><button class="btn-admin btn-admin-danger">حذف</button></form>
+  <% }) %>
+  <form method="post" action="/admin/content/cards" class="admin-form admin-card-item">
+      <%- include('partials/csrf-field') %>
+    <strong>کارت جدید</strong>
+    <input name="title" required placeholder="عنوان" />
+    <textarea name="description" placeholder="توضیح"></textarea>
+    <input name="buttonText" placeholder="دکمه" />
+    <input name="buttonLink" placeholder="لینک" />
+    <button class="btn-admin btn-admin-success">افزودن</button>
+  </form>
+</section>
+
+<section class="admin-section">
+  <h2>صفحات ثابت</h2>
+  <% [
+    { id: 'about', label: 'درباره ما' },
+    { id: 'terms', label: 'قوانین' },
+    { id: 'contact', label: 'تماس (متن صفحه)' }
+  ].forEach(function(item) {
+    var p = pages.find(function(x) { return x.id === item.id; }) || { content: '', title: '' };
+  %>
+    <form method="post" action="/admin/content/pages/<%= item.id %>" class="admin-card-item admin-form">
+  <%- include('partials/csrf-field') %>
+      <h3><%= item.label %></h3>
+      <input name="title" value="<%= p.title || '' %>" />
+      <textarea name="content" rows="8"><%= p.content || '' %></textarea>
+      <button class="btn-admin btn-admin-primary">ذخیره صفحه</button>
+    </form>
+  <% }); %>
+</section>
+
+<section class="admin-section">
+  <h2>مسیرهای آموزشی</h2>
+  <% paths.forEach(path => { %>
+    <h3 style="color:#93c5fd;margin:1rem 0"><%= path.title %></h3>
+    <% path.steps.forEach((step, i) => { %>
+      <form method="post" action="/admin/content/steps/<%= step.id %>" enctype="multipart/form-data" class="admin-card-item admin-form">
+  <%- include('partials/csrf-field') %>
+        <strong>مرحله <%= i+1 %>: <%= step.title %></strong>
+        <input name="title" value="<%= step.title %>" />
+        <label>لینک ویدیو</label>
+        <input name="videoUrl" value="<%= step.videoUrl || '' %>" />
+        <textarea name="content" rows="4"><%= step.content || '' %></textarea>
+        <input name="exerciseFileUrl" value="<%= step.exerciseFileUrl || '' %>" placeholder="فایل تمرین URL" />
+        <input type="file" name="exercise" />
+        <div class="admin-form-row">
+          <input name="sortOrder" type="number" value="<%= step.sortOrder %>" />
+          <label><input type="checkbox" name="isActive" value="true" <%= step.isActive ? 'checked' : '' %> /> فعال</label>
+        </div>
+        <button class="btn-admin btn-admin-primary">ذخیره مرحله</button>
+      </form>
+    <% }) %>
+    <form method="post" action="/admin/content/steps" class="admin-inline-form admin-card-item">
+      <%- include('partials/csrf-field') %>
+      <input type="hidden" name="pathId" value="<%= path.id %>" />
+      <input name="title" placeholder="عنوان مرحله جدید" required />
+      <input name="videoUrl" placeholder="ویدیو" />
+      <button class="btn-admin btn-admin-success">+ مرحله</button>
+    </form>
+  <% }) %>
+</section>
+
+<section class="admin-section">
+  <h2>سوالات متداول</h2>
+  <form method="post" action="/admin/content/faq-categories" class="admin-inline-form" style="margin-bottom:1rem">
+      <%- include('partials/csrf-field') %>
+    <input name="name" placeholder="دسته جدید" required />
+    <button class="btn-admin btn-admin-success">افزودن دسته</button>
+  </form>
+  <% faqCats.forEach(cat => { %>
+    <h4><%= cat.name %></h4>
+    <% cat.faqs.forEach(f => { %>
+      <form method="post" action="/admin/content/faqs/<%= f.id %>" class="admin-card-item admin-form">
+  <%- include('partials/csrf-field') %>
+        <input type="hidden" name="categoryId" value="<%= cat.id %>" />
+        <input name="question" value="<%= f.question %>" />
+        <textarea name="answer"><%= f.answer %></textarea>
+        <input name="sortOrder" type="number" value="<%= f.sortOrder %>" />
+        <label><input type="checkbox" name="isActive" value="true" <%= f.isActive ? 'checked' : '' %> /> فعال</label>
+        <button class="btn-admin btn-admin-primary">ذخیره</button>
+      </form>
+      <form method="post" action="/admin/content/faqs/<%= f.id %>/delete">
+  <%- include('partials/csrf-field') %><button class="btn-admin btn-admin-danger btn-sm">حذف</button></form>
+    <% }) %>
+    <form method="post" action="/admin/content/faqs" class="admin-form admin-card-item">
+      <%- include('partials/csrf-field') %>
+      <input type="hidden" name="categoryId" value="<%= cat.id %>" />
+      <input name="question" placeholder="سوال جدید" required />
+      <textarea name="answer" placeholder="پاسخ" required></textarea>
+      <button class="btn-admin btn-admin-success">افزودن سوال</button>
+    </form>
+  <% }) %>
+</section>
+
+<section class="admin-section">
+  <h2>منوها</h2>
+  <% menus.forEach(m => { %>
+    <form method="post" action="/admin/content/menus/<%= m.id %>" class="admin-inline-form admin-card-item">
+  <%- include('partials/csrf-field') %>
+      <span style="color:#9ca3af"><%= m.menuType %></span>
+      <input name="title" value="<%= m.title %>" />
+      <input name="link" value="<%= m.link %>" />
+      <input name="sortOrder" type="number" value="<%= m.sortOrder %>" style="max-width:80px" />
+      <label><input type="checkbox" name="isActive" value="true" <%= m.isActive ? 'checked' : '' %> /></label>
+      <button class="btn-admin btn-admin-primary">ذخیره</button>
+    </form>
+  <% }) %>
+  <form method="post" action="/admin/content/menus" class="admin-form admin-card-item">
+      <%- include('partials/csrf-field') %>
+    <select name="menuType"><option value="header">هدر</option><option value="footer">فوتر</option></select>
+    <input name="title" placeholder="عنوان" required />
+    <input name="link" placeholder="/path" required />
+    <button class="btn-admin btn-admin-success">افزودن آیتم منو</button>
+  </form>
+</section>
+
+<section class="admin-section">
+  <h2>شبکه‌های اجتماعی</h2>
+  <% socials.forEach(s => {
+    const previewIcon = typeof resolveSocialIconSrc === 'function' ? resolveSocialIconSrc(s) : null;
+  %>
+    <form method="post" action="/admin/content/social/<%= s.id %>" class="admin-inline-form admin-card-item">
+  <%- include('partials/csrf-field') %>
+      <% if (previewIcon) { %><img src="<%= previewIcon %>" alt="" width="24" height="24" style="vertical-align:middle" /><% } %>
+      <input name="platform" value="<%= s.platform %>" />
+      <input name="url" value="<%= s.url %>" />
+      <input name="icon" value="<%= s.icon || '' %>" placeholder="خالی = تشخیص خودکار" dir="ltr" style="min-width:12rem" />
+      <button class="btn-admin btn-admin-primary">ذخیره</button>
+    </form>
+    <form method="post" action="/admin/content/social/<%= s.id %>/delete">
+  <%- include('partials/csrf-field') %><button class="btn-admin btn-admin-danger">حذف</button></form>
+  <% }) %>
+  <form method="post" action="/admin/content/social" class="admin-inline-form admin-card-item">
+      <%- include('partials/csrf-field') %>
+    <input name="platform" placeholder="تلگرام" required />
+    <input name="url" placeholder="https://..." required />
+    <button class="btn-admin btn-admin-success">افزودن</button>
+  </form>
+</section>
+
+<section class="admin-section">
+  <h2>تیم (درباره ما)</h2>
+  <% team.forEach(t => { %>
+    <form method="post" action="/admin/content/team/<%= t.id %>" enctype="multipart/form-data" class="admin-card-item admin-form">
+  <%- include('partials/csrf-field') %>
+      <input name="name" value="<%= t.name %>" />
+      <input name="role" value="<%= t.role %>" />
+      <textarea name="bio"><%= t.bio || '' %></textarea>
+      <input name="photoUrl" value="<%= t.photoUrl || '' %>" />
+      <input type="file" name="photo" accept="image/*" />
+      <button class="btn-admin btn-admin-primary">ذخیره</button>
+    </form>
+  <% }) %>
+  <form method="post" action="/admin/content/team" enctype="multipart/form-data" class="admin-form admin-card-item">
+      <%- include('partials/csrf-field') %>
+    <input name="name" placeholder="نام" required />
+    <input name="role" placeholder="سمت" required />
+    <textarea name="bio" placeholder="بیو"></textarea>
+    <button class="btn-admin btn-admin-success">افزودن عضو تیم</button>
+  </form>
+</section>
+<%- include('partials/shell-end') %>

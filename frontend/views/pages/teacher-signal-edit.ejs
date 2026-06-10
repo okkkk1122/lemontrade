@@ -1,0 +1,55 @@
+<%- include('../partials/layout-start') %>
+<h1>ویرایش سیگنال</h1>
+<p class="text-muted">ویرایش تا ۱ ساعت پس از ثبت — <%= signal.pairSymbol %></p>
+<form id="edit-signal-form" method="post" action="/teacher/signals/<%= signal.id %>" class="card" style="margin-top:1rem">
+  <%- include('../partials/csrf-field') %>
+  <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div>
+      <label>جفت‌ارز</label>
+      <select class="form-control" name="pairSymbol" required>
+        <% currencyPairs.forEach(p => { %>
+          <option value="<%= p.symbol %>" <%= signal.pairSymbol === p.symbol ? 'selected' : '' %>><%= p.symbol %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div>
+      <label>تایم‌فریم</label>
+      <select class="form-control" name="timeframe">
+        <% timeframes.forEach(tf => { %>
+          <option value="<%= tf %>" <%= signal.timeframe === tf ? 'selected' : '' %>><%= tf %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div>
+      <label>نوع</label>
+      <select class="form-control" name="tradeType">
+        <option value="BUY" <%= signal.tradeType === 'BUY' ? 'selected' : '' %>>BUY</option>
+        <option value="SELL" <%= signal.tradeType === 'SELL' ? 'selected' : '' %>>SELL</option>
+      </select>
+    </div>
+    <div><label>ورود</label><input class="form-control" name="entryPrice" type="number" step="any" value="<%= signal.entryPrice %>" required /></div>
+    <div><label>SL</label><input class="form-control" name="stopLoss" type="number" step="any" value="<%= signal.stopLoss %>" required /></div>
+    <div><label>TP1</label><input class="form-control" name="takeProfit1" type="number" step="any" value="<%= signal.takeProfit1 || '' %>" /></div>
+    <div><label>TP2</label><input class="form-control" name="takeProfit2" type="number" step="any" value="<%= signal.takeProfit2 || '' %>" /></div>
+  </div>
+  <label>تحلیل</label>
+  <textarea class="form-control" name="analysis" rows="4"><%= signal.analysis || '' %></textarea>
+  <% if (signal.chartImageUrl) { %><p>چارت فعلی: <a href="<%= signal.chartImageUrl %>" target="_blank">مشاهده</a></p><% } %>
+  <label>تصویر جدید (اختیاری)</label>
+  <input type="file" name="chart" accept="image/*" />
+  <div style="margin-top:1rem;display:flex;gap:0.5rem">
+    <button class="btn btn-primary">ذخیره</button>
+    <a href="/teacher" class="btn btn-outline">بازگشت</a>
+  </div>
+</form>
+<script>
+(function () {
+  const form = document.getElementById('edit-signal-form');
+  form?.addEventListener('submit', () => {
+    const file = form.querySelector('input[name="chart"]');
+    if (file?.files?.length) form.enctype = 'multipart/form-data';
+    else form.removeAttribute('enctype');
+  });
+})();
+</script>
+<%- include('../partials/layout-end') %>

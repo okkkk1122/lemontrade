@@ -1,0 +1,23 @@
+<%- include('partials/shell-start') %>
+<h1>مدیریت کاربران</h1>
+<form method="get" class="admin-inline-form" style="margin:1rem 0">
+  <input name="q" value="<%= q || '' %>" placeholder="جستجو نام، ایمیل، موبایل" style="flex:2" />
+  <button class="btn-admin btn-admin-primary">جستجو</button>
+</form>
+<table class="admin-table">
+  <thead><tr><th>نام</th><th>ایمیل</th><th>نقش</th><th>اشتراک</th><th>عملیات</th></tr></thead>
+  <tbody>
+    <% users.forEach(u => { %>
+      <tr>
+        <td><%= u.fullName %></td>
+        <td><%= u.email %></td>
+        <td><%= u.role %><% if (u.isBlocked) { %> <span style="color:#ef4444">(مسدود)</span><% } %></td>
+        <td><%= u.subscriptions[0] ? 'فعال' : '—' %></td>
+        <td>
+          <a href="/admin/users/<%= u.id %>" class="btn-admin btn-admin-outline">ویرایش کامل</a>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('partials/shell-end') %>

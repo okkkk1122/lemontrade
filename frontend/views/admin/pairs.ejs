@@ -1,0 +1,36 @@
+<%- include('partials/shell-start') %>
+<h1>مدیریت جفت‌ارزها</h1>
+<p class="text-muted">جفت‌های فعال در فرم ثبت سیگنال استاد نمایش داده می‌شوند.</p>
+
+<section class="admin-section">
+  <h2>افزودن جفت‌ارز</h2>
+  <form method="post" action="/admin/pairs" class="admin-form admin-card-item">
+      <%- include('partials/csrf-field') %>
+    <div class="admin-form-row">
+      <input name="symbol" placeholder="مثال: BTC/USDT" required />
+      <label><input type="checkbox" name="isActive" value="true" checked /> فعال</label>
+      <button class="btn-admin btn-admin-success">افزودن</button>
+    </div>
+  </form>
+</section>
+
+<section class="admin-section">
+  <h2>لیست جفت‌ها</h2>
+  <% pairs.forEach(p => { %>
+    <div class="admin-card-item">
+      <form method="post" action="/admin/pairs/<%= p.id %>" class="admin-form">
+  <%- include('partials/csrf-field') %>
+        <div class="admin-form-row">
+          <input name="symbol" value="<%= p.symbol %>" required />
+          <label><input type="checkbox" name="isActive" value="true" <%= p.isActive ? 'checked' : '' %> /> فعال</label>
+          <button class="btn-admin btn-admin-primary">ذخیره</button>
+        </div>
+      </form>
+      <form method="post" action="/admin/pairs/<%= p.id %>/delete" style="margin-top:0.5rem" onsubmit="return confirm('حذف این جفت؟')">
+  <%- include('partials/csrf-field') %>
+        <button class="btn-admin btn-admin-danger">حذف</button>
+      </form>
+    </div>
+  <% }) %>
+</section>
+<%- include('partials/shell-end') %>

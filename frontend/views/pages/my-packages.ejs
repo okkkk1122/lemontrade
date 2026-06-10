@@ -1,0 +1,10 @@
+<%- include('../partials/layout-start') %>
+<h1>پکیج‌های من</h1>
+<div class="grid-3"><% items.forEach(up => { %>
+  <div class="card">
+    <h3><%= up.package.title %></h3>
+    <p>خرید: <%= new Date(up.purchasedAt).toLocaleDateString('fa-IR') %></p>
+    <a href="/my-packages/<%= up.id %>" class="btn btn-primary btn-sm">مشاهده محتوا</a>
+  </div>
+<% }) %></div>
+<%- include('../partials/layout-end') %>

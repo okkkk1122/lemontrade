@@ -1,0 +1,17 @@
+﻿QA audit against http://localhost:3010
+node : TypeError: fetch failed
+At C:\Users\mgh\AppData\Local\Temp\ps-script-ef492fba-5ed1-436b-8792-fdb3021bd5b7.ps1:79 char:39
++ ... Users\mgh\Desktop\limootrade"; node scripts/qa-audit.mjs 2>&1 | Out-F ...
++                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (TypeError: fetch failed:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    at node:internal/deps/undici/undici:14902:13
+    at async main (file:///C:/Users/mgh/Desktop/limootrade/scripts/qa-audit.mjs:115:16) {
+  [cause]: Error: read ECONNRESET
+      at TCP.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}

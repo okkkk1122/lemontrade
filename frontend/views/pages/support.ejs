@@ -1,0 +1,16 @@
+<%- include('../partials/layout-start') %>
+<h1>پشتیبانی</h1>
+<button class="btn btn-primary" onclick="document.getElementById('new-ticket').style.display='block'">تیکت جدید</button>
+<div id="new-ticket" class="card" style="display:none;margin:1rem 0">
+  <form method="post">
+      <%- include('../partials/csrf-field') %>
+    <input class="form-control" name="subject" placeholder="موضوع" required style="margin-bottom:0.5rem" />
+    <select class="form-control" name="category" style="margin-bottom:0.5rem"><option>فنی</option><option>اشتراک</option><option>سیگنال</option></select>
+    <textarea class="form-control" name="message" required></textarea>
+    <button class="btn btn-primary" style="margin-top:0.5rem">ارسال</button>
+  </form>
+</div>
+<div class="table-wrap"><table><thead><tr><th>موضوع</th><th>اولویت</th><th>وضعیت</th><th></th></tr></thead><tbody>
+<% tickets.forEach(t => { %><tr><td><%= t.subject %></td><td><%= t.priority %></td><td><%= t.status %></td><td><a href="/support/<%= t.id %>">مشاهده</a></td></tr><% }) %>
+</tbody></table></div>
+<%- include('../partials/layout-end') %>

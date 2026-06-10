@@ -1,0 +1,13 @@
+<%- include('../partials/layout-start') %>
+<h1>وبلاگ</h1>
+<form method="get" style="margin:1rem 0;display:flex;gap:0.5rem"><input class="form-control" name="q" placeholder="جستجو" /><button class="btn btn-primary btn-sm">جستجو</button></form>
+<div class="grid-3">
+  <% posts.forEach(p => { %>
+    <a href="/blog/<%= p.slug %>" class="card" style="display:block">
+      <h3><%= p.title %></h3>
+      <p style="color:var(--text-muted)"><%= p.excerpt %></p>
+      <small><%= p.authorName %> · <%= new Date(p.publishedAt).toLocaleDateString('fa-IR') %> · <%= p.views %> بازدید</small>
+    </a>
+  <% }) %>
+</div>
+<%- include('../partials/layout-end') %>

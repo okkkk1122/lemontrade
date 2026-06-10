@@ -1,0 +1,5 @@
+# Production reverse proxy — set DOMAIN in .env (e.g. trade.example.com)
+{$DOMAIN:localhost} {
+	encode gzip
+	reverse_proxy app:3010
+}

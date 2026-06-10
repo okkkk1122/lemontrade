@@ -1,0 +1,90 @@
+<%- include('../partials/layout-start') %>
+<section class="hero-slider">
+  <% if (sliders && sliders.length) { sliders.forEach((s, i) => { %>
+    <div class="slide <%= i === 0 ? 'active' : '' %>" style="background-image:url('<%= s.imageUrl || '/logo.png' %>')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <h2><%= s.title %></h2>
+        <% if (s.subtitle) { %><p><%= s.subtitle %></p><% } %>
+        <% if (s.buttonLink) { %><a href="<%= s.buttonLink %>" class="btn btn-primary" style="margin-top:1rem"><%= s.buttonText || 'بیشتر' %></a><% } %>
+      </div>
+    </div>
+  <% }) } else { %>
+    <div class="slide active" style="background:linear-gradient(135deg,#0D1117,#1e3a5f)">
+      <div class="slide-content">
+        <h2>لیموترید — آموزش و سیگنال حرفه‌ای</h2>
+        <p>از صفر تا صد ترید، سیگنال زنده و صندوق سرمایه‌گذاری</p>
+        <a href="/signup" class="btn btn-primary" style="margin-top:1rem">شروع رایگان</a>
+      </div>
+    </div>
+  <% } %>
+</section>
+
+<h2 class="section-title">خدمات اصلی</h2>
+<div class="grid-3">
+  <% (cards && cards.length ? cards : [
+    { title: 'سیگنال‌های زنده', description: 'سیگنال لحظه‌ای از اساتید با ۲FA و اشتراک', buttonText: 'مشاهده', buttonLink: '/signals/live' },
+    { title: 'آموزش صفر تا صد', description: 'مسیر ۷ و ۱۰ مرحله‌ای ویدیویی', buttonText: 'شروع آموزش', buttonLink: '/learn/zero-to-hundred' },
+    { title: 'صندوق سرمایه‌گذاری', description: 'مدیریت سرمایه با شفافیت', buttonText: 'اطلاعات', buttonLink: '/investment' }
+  ]).forEach(c => { %>
+    <div class="card">
+      <h3><%= c.title %></h3>
+      <p style="color:var(--text-muted);margin:0.75rem 0"><%= c.description %></p>
+      <a href="<%= c.buttonLink %>" class="btn btn-secondary btn-sm"><%= c.buttonText || 'ادامه' %></a>
+    </div>
+  <% }) %>
+</div>
+
+<h2 class="section-title">سیگنال‌های نمونه</h2>
+<div class="grid-3">
+  <% (sampleSignals || []).forEach(s => { %>
+    <div class="card">
+      <strong><%= s.pairSymbol %></strong>
+      <p>ورود: <%= s.entryPrice %> | SL: <%= s.stopLoss %></p>
+      <p>استاد: <%= s.teacher?.user?.fullName || '—' %> ⭐ <%= s.teacher?.rating || 4.5 %></p>
+      <a href="/signals/<%= s.id %>" class="btn btn-outline btn-sm">مشاهده جزئیات</a>
+    </div>
+  <% }) %>
+</div>
+
+<h2 class="section-title">برترین اساتید</h2>
+<div class="grid-4">
+  <% (topTeachers || []).forEach(t => { %>
+    <div class="card" style="text-align:center">
+      <div style="font-size:3rem">👨‍🏫</div>
+      <h4><%= t.user.fullName %></h4>
+      <p>⭐ <%= t.rating.toFixed(1) %> | <%= t._count?.signals || 0 %> سیگنال</p>
+    </div>
+  <% }) %>
+</div>
+
+<h2 class="section-title">آمار سایت</h2>
+<div class="grid-4" data-counters>
+  <div class="card"><div class="stat-counter" data-target="<%= stats.users %>">0</div><p>کاربر فعال</p></div>
+  <div class="card"><div class="stat-counter" data-target="<%= stats.signals %>">0</div><p>سیگنال موفق</p></div>
+  <div class="card"><div class="stat-counter" data-target="<%= stats.profitPercent %>">0</div><p>٪ سود میانگین</p></div>
+  <div class="card"><div class="stat-counter" data-target="<%= stats.sessions %>">0</div><p>جلسه برگزار شده</p></div>
+</div>
+<script>
+document.querySelectorAll('[data-target]').forEach(el => {
+  const t = +el.dataset.target; let c = 0;
+  const step = Math.ceil(t / 40);
+  const iv = setInterval(() => { c += step; if (c >= t) { c = t; clearInterval(iv); } el.textContent = c.toLocaleString('fa-IR'); }, 30);
+});
+</script>
+
+<h2 class="section-title">جلسات پیش‌رو</h2>
+<% (upcomingSessions || []).forEach(s => { %>
+  <div class="card" style="margin-bottom:0.75rem">
+    <strong><%= s.title %></strong> — <%= s.teacher?.user?.fullName %>
+    <span style="color:var(--text-muted)"><%= new Date(s.startAt).toLocaleString('fa-IR') %></span>
+  </div>
+<% }) %>
+<a href="/sessions" class="btn btn-outline">مشاهده همه جلسات</a>
+
+<h2 class="section-title">سوالات متداول</h2>
+<% (faqs || []).forEach(f => { %>
+  <details class="card" style="margin-bottom:0.5rem"><summary><%= f.question %></summary><p style="margin-top:0.5rem;color:var(--text-muted)"><%= f.answer %></p></details>
+<% }) %>
+<a href="/faq" class="btn btn-outline" style="margin-top:1rem">مشاهده همه سوالات</a>
+<%- include('../partials/layout-end') %>

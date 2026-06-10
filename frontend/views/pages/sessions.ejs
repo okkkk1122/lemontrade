@@ -1,0 +1,20 @@
+<%- include('../partials/layout-start') %>
+<h1>جلسات زنده</h1>
+<h2 class="section-title">پیش‌رو</h2>
+<% upcoming.forEach(s => { %>
+  <div class="card" style="margin-bottom:0.75rem">
+    <h3><%= s.title %></h3>
+    <p><%= s.teacher?.user?.fullName %> · <%= new Date(s.startAt).toLocaleString('fa-IR') %> · <%= s.durationMin %> دقیقه</p>
+    <% if (isLoggedIn) { %><button class="btn btn-sm btn-outline">یادآوری</button><% } %>
+    <% const live = new Date(s.startAt) <= new Date() && new Date() <= new Date(new Date(s.startAt).getTime() + s.durationMin*60000); %>
+    <% if (live && s.roomLink) { %><a href="<%= s.roomLink %>" class="btn btn-sm btn-primary">شرکت در جلسه</a><% } %>
+  </div>
+<% }) %>
+<h2 class="section-title">آرشیو</h2>
+<% past.forEach(s => { %>
+  <div class="card" style="margin-bottom:0.5rem">
+    <%= s.title %> — <%= new Date(s.startAt).toLocaleDateString('fa-IR') %>
+    <% if (s.recordingUrl && activeSubscription) { %><a href="<%= s.recordingUrl %>">مشاهده ضبط</a><% } else if (s.recordingUrl) { %><span style="color:var(--text-muted)">نیاز به اشتراک</span><% } %>
+  </div>
+<% }) %>
+<%- include('../partials/layout-end') %>

@@ -1,0 +1,11 @@
+<%- include('../partials/layout-start') %>
+<div class="auth-page">
+  <div class="card auth-card">
+    <h1>کد دو مرحله‌ای</h1>
+    <% if (typeof error !== 'undefined' && error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <form method="post">
+      <%- include('../partials/csrf-field') %><div class="form-group"><label>کد ۶ رقمی</label><input class="form-control" name="code" required maxlength="6" pattern="[0-9]{6}" /></div>
+    <button class="btn btn-primary" style="width:100%">تأیید</button></form>
+  </div>
+</div>
+<%- include('../partials/layout-end') %>

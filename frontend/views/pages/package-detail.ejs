@@ -1,0 +1,12 @@
+<%- include('../partials/layout-start') %>
+<h1><%= pkg.title %></h1>
+<p style="font-size:1.25rem;color:var(--primary)"><%= formatToman(pkg.finalPrice) %></p>
+<div style="margin:1.5rem 0"><%- pkg.fullDesc || pkg.shortDesc %></div>
+<h3>سرفصل‌ها</h3>
+<ul><% (pkg.syllabus || []).forEach(s => { %><li><%= typeof s === 'string' ? s : s.title %></li><% }) %></ul>
+<% if (isLoggedIn) { %>
+  <form method="post" action="/cart/add">
+      <%- include('../partials/csrf-field') %><input type="hidden" name="packageId" value="<%= pkg.id %>" />
+  <button class="btn btn-primary">افزودن به سبد</button></form>
+<% } %>
+<%- include('../partials/layout-end') %>

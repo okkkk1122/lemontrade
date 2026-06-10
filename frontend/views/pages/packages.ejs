@@ -1,0 +1,19 @@
+<%- include('../partials/layout-start') %>
+<h1>فروشگاه پکیج‌های آموزشی</h1>
+<div style="margin:1rem 0;display:flex;gap:0.5rem;flex-wrap:wrap">
+  <a href="/packages" class="btn btn-sm <%= !typeof query !== 'undefined' || !query.category ? 'btn-primary' : 'btn-outline' %>">همه</a>
+  <% categories.forEach(c => { %><a href="/packages?category=<%= c.slug %>" class="btn btn-sm btn-outline"><%= c.name %></a><% }) %>
+</div>
+<div class="grid-3">
+  <% packages.forEach(p => { %>
+    <div class="card">
+      <h3><%= p.title %></h3>
+      <p style="color:var(--text-muted);margin:0.5rem 0"><%= p.shortDesc %></p>
+      <p><%= formatToman(p.finalPrice) %><% if (p.finalPrice < p.price) { %> <s style="color:var(--text-muted)"><%= formatToman(p.price) %></s><% } %></p>
+      <a href="/packages/<%= p.slug %>" class="btn btn-outline btn-sm">جزئیات</a>
+      <% if (isLoggedIn) { %><form method="post" action="/cart/add" style="margin-top:0.5rem">
+      <%- include('../partials/csrf-field') %><input type="hidden" name="packageId" value="<%= p.id %>" /><button class="btn btn-primary btn-sm">افزودن به سبد</button></form><% } %>
+    </div>
+  <% }) %>
+</div>
+<%- include('../partials/layout-end') %>

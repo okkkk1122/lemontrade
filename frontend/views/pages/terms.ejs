@@ -1,0 +1,6 @@
+<%- include('../partials/layout-start') %>
+<h1>قوانین و مقررات</h1>
+<p style="color:var(--text-muted)">آخرین به‌روزرسانی: <%= page?.updatedAt ? new Date(page.updatedAt).toLocaleDateString('fa-IR') : '۱۴۰۴' %></p>
+<div class="card" style="margin-top:1rem"><%- page?.content || '<p>متن قوانین توسط ادمین قابل ویرایش است.</p>' %></div>
+<button class="btn btn-outline" style="margin-top:1rem" onclick="window.print()">دانلود PDF (چاپ)</button>
+<%- include('../partials/layout-end') %>

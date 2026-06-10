@@ -1,0 +1,12 @@
+<%- include('../partials/layout-start') %>
+<div class="card" style="max-width:520px;margin:2rem auto">
+  <h1>فعال‌سازی ۲FA</h1>
+  <p style="color:var(--text-muted);margin:1rem 0">برای دیدن سیگنال‌های زنده، احراز هویت دو مرحله‌ای الزامی است.</p>
+  <% if (typeof error !== 'undefined' && error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <img src="<%= qr %>" alt="QR" style="display:block;margin:1rem auto;max-width:200px" />
+  <p style="font-size:0.85rem;text-align:center;word-break:break-all"><%= secret %></p>
+  <form method="post">
+      <%- include('../partials/csrf-field') %><div class="form-group"><label>کد ۶ رقمی</label><input class="form-control" name="code" required /></div>
+  <button class="btn btn-primary">فعال‌سازی</button></form>
+</div>
+<%- include('../partials/layout-end') %>

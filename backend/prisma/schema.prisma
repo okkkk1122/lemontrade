@@ -1,0 +1,665 @@
+generator client {
+  provider      = "prisma-client-js"
+  engineType      = "library"
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  TEACHER
+  ADMIN
+  FINANCE_ADMIN
+  CONTENT_ADMIN
+  SUPPORT_ADMIN
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum SignalStatus {
+  ACTIVE
+  CLOSED
+  HIT_TP
+  HIT_SL
+  SUSPICIOUS
+}
+
+enum TradeType {
+  BUY
+  SELL
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  ANSWERED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAW
+  SUBSCRIPTION
+  PACKAGE
+  REFUND
+  ADMIN_ADJUST
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum LearningPathType {
+  SEVEN_STEPS
+  TEN_STEPS
+}
+
+model User {
+  id                String    @id @default(uuid())
+  fullName          String
+  email             String    @unique
+  mobile            String    @unique
+  passwordHash      String
+  role              UserRole  @default(USER)
+  emailVerified     Boolean   @default(false)
+  emailVerifyToken  String?
+  emailVerifyExpiry DateTime?
+  twoFactorSecret   String?
+  twoFactorEnabled  Boolean   @default(false)
+  backupCodes       String[]  @default([])
+  referralCode      String    @unique
+  referredById      String?
+  referredBy        User?     @relation("Referrals", fields: [referredById], references: [id])
+  referrals         User[]    @relation("Referrals")
+  isBlocked         Boolean   @default(false)
+  loginAttempts     Int       @default(0)
+  lockedUntil       DateTime?
+  deleteRequestedAt DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  lastLoginAt       DateTime?
+
+  teacherProfile    Teacher?
+  subscriptions     Subscription[]
+  wallet            Wallet?
+  cart              Cart?
+  userPackages      UserPackage[]
+  stepProgress      UserStepProgress[]
+  tickets           Ticket[]
+  notifications     UserNotification[]
+  devices           Device[]
+  sessions          Session[]
+  signals           Signal[]       @relation("TeacherSignals")
+  signalViews       SignalView[]
+  signalReports     SignalReport[]
+  packageReviews    PackageReview[]
+  blogComments      BlogComment[]
+  ticketMessages    TicketMessage[]
+  referralsMade     Referral[]     @relation("Referrer")
+  referralsReceived Referral[]     @relation("Referee")
+  referralRewards   ReferralReward[]
+  investment        Investment?
+  sessionReminders  SessionReminder[]
+  adminLogs         AdminLog[]
+
+  @@index([email])
+  @@index([mobile])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  ip        String?
+  userAgent String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Device {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String?
+  ip           String?
+  browser      String?
+  fingerprint  String?
+  lastActiveAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+}
+
+model SiteSetting {
+  id    String @id @default("main")
+  data  Json   @default("{}")
+}
+
+model Slider {
+  id          String  @id @default(uuid())
+  title       String
+  subtitle    String?
+  imageUrl    String?
+  buttonText  String?
+  buttonLink  String?
+  sortOrder   Int     @default(0)
+  isActive    Boolean @default(true)
+}
+
+model MenuItem {
+  id         String  @id @default(uuid())
+  menuType   String  // header | footer
+  title      String
+  link       String
+  icon       String?
+  parentId   String?
+  sortOrder  Int     @default(0)
+  openNewTab Boolean @default(false)
+  isActive   Boolean @default(true)
+}
+
+model HomeCard {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  buttonText  String?
+  buttonLink  String?
+  icon        String?
+  sortOrder   Int     @default(0)
+  isActive    Boolean @default(true)
+}
+
+model SiteStat {
+  id    String @id @default("main")
+  users Int    @default(0)
+  signals Int  @default(0)
+  profitPercent Float @default(0)
+  sessions Int @default(0)
+}
+
+model SocialLink {
+  id        String  @id @default(uuid())
+  platform  String
+  url       String
+  icon      String?
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+}
+
+model Teacher {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio             String?
+  avatarUrl       String?
+  rating          Float    @default(4.5)
+  successRate     Float    @default(0)
+  isActive        Boolean  @default(true)
+  isApproved      Boolean  @default(false)
+  signals         Signal[]
+  liveSessions    LiveSession[]
+}
+
+model CurrencyPair {
+  id       String   @id @default(uuid())
+  symbol   String   @unique
+  isActive Boolean  @default(true)
+  signals  Signal[]
+}
+
+model Signal {
+  id           String       @id @default(uuid())
+  teacherId    String
+  teacher      Teacher      @relation(fields: [teacherId], references: [id])
+  teacherUserId String
+  teacherUser  User         @relation("TeacherSignals", fields: [teacherUserId], references: [id])
+  pairId       String?
+  pair         CurrencyPair? @relation(fields: [pairId], references: [id])
+  pairSymbol   String
+  timeframe    String
+  tradeType    TradeType
+  entryPrice   Float
+  stopLoss     Float
+  takeProfit1  Float?
+  takeProfit2  Float?
+  chartImageUrl String?
+  analysis     String?
+  status       SignalStatus @default(ACTIVE)
+  viewCount    Int          @default(0)
+  isSample     Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  closedAt     DateTime?
+  views        SignalView[]
+  reports      SignalReport[]
+  comments     SignalComment[]
+}
+
+model SignalView {
+  id        String   @id @default(uuid())
+  signalId  String
+  signal    Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  viewedAt  DateTime @default(now())
+  @@unique([signalId, userId])
+}
+
+model SignalReport {
+  id        String   @id @default(uuid())
+  signalId  String
+  signal    Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reason    String
+  details   String?
+  createdAt DateTime @default(now())
+}
+
+model SignalComment {
+  id        String   @id @default(uuid())
+  signalId  String
+  signal    Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  userId    String
+  content   String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Subscription {
+  id        String             @id @default(uuid())
+  userId    String
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  amount    Int
+  status    SubscriptionStatus @default(ACTIVE)
+  autoRenew Boolean            @default(false)
+  createdAt DateTime           @default(now())
+}
+
+model Wallet {
+  id           String        @id @default(uuid())
+  userId       String        @unique
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance      Int           @default(0)
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          String            @id @default(uuid())
+  walletId    String
+  wallet      Wallet            @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  type        TransactionType
+  amount      Int
+  status      TransactionStatus @default(PENDING)
+  trackingCode String?
+  description String?
+  metadata    Json?
+  createdAt   DateTime          @default(now())
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id         String  @id @default(uuid())
+  cartId     String
+  cart       Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  itemType   String  // subscription | package
+  packageId  String?
+  package    Package? @relation(fields: [packageId], references: [id])
+  quantity   Int     @default(1)
+  price      Int
+}
+
+model PackageCategory {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  sortOrder Int       @default(0)
+  packages  Package[]
+}
+
+model Package {
+  id           String          @id @default(uuid())
+  title        String
+  slug         String          @unique
+  shortDesc    String?
+  fullDesc     String?
+  price        Int
+  discountPercent Int?
+  discountStart DateTime?
+  discountEnd   DateTime?
+  coverImageUrl String?
+  categoryId   String?
+  category     PackageCategory? @relation(fields: [categoryId], references: [id])
+  isActive     Boolean         @default(true)
+  syllabus     Json            @default("[]")
+  lessons      PackageLesson[]
+  cartItems    CartItem[]
+  userPackages UserPackage[]
+  reviews      PackageReview[]
+  salesCount   Int             @default(0)
+  createdAt    DateTime        @default(now())
+}
+
+model PackageLesson {
+  id          String  @id @default(uuid())
+  packageId   String
+  package     Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  title       String
+  videoUrl    String?
+  fileUrl     String?
+  sortOrder   Int     @default(0)
+  allowDownload Boolean @default(true)
+}
+
+model UserPackage {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageId  String
+  package    Package  @relation(fields: [packageId], references: [id])
+  purchasedAt DateTime @default(now())
+  expiresAt  DateTime?
+  progress   Json     @default("{}")
+}
+
+model PackageReview {
+  id        String   @id @default(uuid())
+  packageId String
+  package   Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int
+  content   String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model LearningPath {
+  id    String           @id @default(uuid())
+  type  LearningPathType @unique
+  title String
+  steps LearningStep[]
+}
+
+model LearningStep {
+  id            String           @id @default(uuid())
+  pathId        String
+  path          LearningPath     @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  title         String
+  content       String?
+  videoUrl      String?
+  exerciseFileUrl String?
+  sortOrder     Int
+  isActive      Boolean          @default(true)
+  isArchived    Boolean          @default(false)
+  progress      UserStepProgress[]
+}
+
+model UserStepProgress {
+  id           String       @id @default(uuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stepId       String
+  step         LearningStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  percentWatched Int        @default(0)
+  completed    Boolean      @default(false)
+  @@unique([userId, stepId])
+}
+
+model LiveSession {
+  id           String   @id @default(uuid())
+  title        String
+  teacherId    String
+  teacher      Teacher  @relation(fields: [teacherId], references: [id])
+  startAt      DateTime
+  durationMin  Int      @default(60)
+  maxAttendees Int?
+  roomLink     String?
+  status       String   @default("scheduled")
+  recordingUrl String?
+  reminders    SessionReminder[]
+}
+
+model SessionReminder {
+  id        String      @id @default(uuid())
+  sessionId String
+  session   LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sent      Boolean     @default(false)
+  @@unique([sessionId, userId])
+}
+
+model FaqCategory {
+  id    String @id @default(uuid())
+  name  String
+  slug  String @unique
+  faqs  Faq[]
+}
+
+model Faq {
+  id         String      @id @default(uuid())
+  categoryId String
+  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  question   String
+  answer     String
+  sortOrder  Int         @default(0)
+  isActive   Boolean     @default(true)
+}
+
+model BlogCategory {
+  id    String     @id @default(uuid())
+  name  String
+  slug  String     @unique
+  posts BlogPost[]
+}
+
+model BlogPost {
+  id          String       @id @default(uuid())
+  title       String
+  slug        String       @unique
+  excerpt     String?
+  content     String
+  coverImage  String?
+  categoryId  String?
+  category    BlogCategory? @relation(fields: [categoryId], references: [id])
+  authorName  String
+  views       Int          @default(0)
+  status      String       @default("published")
+  publishedAt DateTime     @default(now())
+  tags        String[]     @default([])
+  comments    BlogComment[]
+}
+
+model BlogComment {
+  id        String   @id @default(uuid())
+  postId    String
+  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model PageContent {
+  id      String @id
+  title   String?
+  content String?
+  data    Json   @default("{}")
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String  @id @default(uuid())
+  name      String
+  role      String
+  bio       String?
+  photoUrl  String?
+  sortOrder Int     @default(0)
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}
+
+model Ticket {
+  id         String         @id @default(uuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject    String
+  category   String
+  priority   TicketPriority @default(MEDIUM)
+  status     TicketStatus   @default(OPEN)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  messages   TicketMessage[]
+}
+
+model TicketMessage {
+  id        String   @id @default(uuid())
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  isStaff   Boolean  @default(false)
+  content   String
+  fileUrl   String?
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  body      String
+  link      String?
+  imageUrl  String?
+  audience  String   @default("all")
+  sentAt    DateTime @default(now())
+  userNotifications UserNotification[]
+}
+
+model UserNotification {
+  id             String       @id @default(uuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notificationId String
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  read           Boolean      @default(false)
+  clicked        Boolean      @default(false)
+}
+
+model ReferralSetting {
+  id            String @id @default("main")
+  levels        Json   @default("[]")
+}
+
+model Referral {
+  id              String   @id @default(uuid())
+  referrerId      String
+  referrer        User     @relation("Referrer", fields: [referrerId], references: [id])
+  refereeId       String   @unique
+  referee         User     @relation("Referee", fields: [refereeId], references: [id])
+  registeredAt    DateTime @default(now())
+  firstPurchaseAt DateTime?
+  isQualified     Boolean  @default(false)
+}
+
+model ReferralReward {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level     Int
+  reward    String
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Investment {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance      Int      @default(0)
+  totalPnL     Float    @default(0)
+  allocation   Json     @default("{}")
+  isApproved   Boolean  @default(false)
+  updatedAt    DateTime @updatedAt
+  transactions InvestmentTransaction[]
+  documents    InvestmentDocument[]
+}
+
+model InvestmentTransaction {
+  id           String     @id @default(uuid())
+  investmentId String
+  investment   Investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  type         String
+  amount       Int
+  description  String?
+  createdAt    DateTime   @default(now())
+}
+
+model InvestmentDocument {
+  id           String     @id @default(uuid())
+  investmentId String
+  investment   Investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  type         String
+  fileUrl      String
+  createdAt    DateTime   @default(now())
+}
+
+model InvestmentRequest {
+  id        String   @id @default(uuid())
+  userId    String
+  amount    Int
+  status    String   @default("pending")
+  reason    String?
+  createdAt DateTime @default(now())
+}
+
+model AdminLog {
+  id        String   @id @default(uuid())
+  adminId   String
+  admin     User     @relation(fields: [adminId], references: [id])
+  action    String
+  details   String?
+  ip        String?
+  createdAt DateTime @default(now())
+}
+
+model PasswordReset {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+}

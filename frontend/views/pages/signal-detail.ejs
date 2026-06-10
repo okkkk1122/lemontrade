@@ -1,0 +1,27 @@
+<%- include('../partials/layout-start') %>
+<% if (typeof isPublicSample !== 'undefined' && isPublicSample) { %>
+  <div class="alert alert-info">این سیگنال نمونه است — برای سیگنال‌های زنده واقعی اشتراک و ورود لازم است.</div>
+<% } %>
+<a href="<%= typeof isPublicSample !== 'undefined' && isPublicSample ? '/' : '/signals/live' %>" class="btn btn-outline btn-sm">← بازگشت</a>
+<h1 style="margin:1rem 0">سیگنال <%= signal.tradeType %> <%= signal.pairSymbol %></h1>
+<% if (signal.chartImageUrl) { %><img src="<%= signal.chartImageUrl %>" alt="چارت" style="max-width:100%;border-radius:var(--radius);margin:1rem 0" /><% } %>
+<div class="grid-3">
+  <div class="card" style="border-color:var(--secondary)"><small>ورود</small><div style="font-size:1.5rem;color:var(--secondary)"><%= signal.entryPrice %></div>
+    <button class="btn btn-sm btn-outline" data-copy="<%= signal.entryPrice %>">کپی <span class="copy-msg"></span></button></div>
+  <div class="card" style="border-color:var(--error)"><small>حد ضرر</small><div style="font-size:1.5rem;color:var(--error)"><%= signal.stopLoss %></div></div>
+  <div class="card"><small>TP1 / TP2</small><div><%= signal.takeProfit1 || '-' %> / <%= signal.takeProfit2 || '-' %></div>
+    <% if (rr) { %><p>RR: <%= rr %></p><% } %></div>
+</div>
+<p style="margin:1rem 0"><%= signal.analysis || '' %></p>
+<p>استاد: <strong><%= teacherName %></strong> · بازدید: <%= signal.viewCount %></p>
+<% if (isLoggedIn && !isPublicSample) { %>
+<button class="btn btn-outline btn-sm" onclick="document.getElementById('report-modal').style.display='block'">گزارش اشتباه</button>
+<% } %>
+<div id="report-modal" class="card" style="display:none;margin-top:1rem">
+  <form onsubmit="event.preventDefault();const csrf=document.querySelector('meta[name=csrf-token]')?.content;fetch('/signals/<%= signal.id %>/report',{method:'POST',headers:{'Content-Type':'application/json','CSRF-Token':csrf||''},body:JSON.stringify({reason:reportReason.value,details:reportDetails.value})}).then(()=>alert('ثبت شد'))">
+    <input class="form-control" id="reportReason" placeholder="دلیل" required />
+    <textarea class="form-control" id="reportDetails" style="margin-top:0.5rem"></textarea>
+    <button class="btn btn-danger btn-sm" style="margin-top:0.5rem">ارسال</button>
+  </form>
+</div>
+<%- include('../partials/layout-end') %>

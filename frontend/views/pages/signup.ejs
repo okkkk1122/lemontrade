@@ -1,0 +1,42 @@
+<%- include('../partials/layout-start') %>
+
+<div class="auth-page">
+
+  <div class="card auth-card">
+
+    <h1 style="margin-bottom:1rem;text-align:center">ثبت‌نام</h1>
+
+    <% if (typeof error !== 'undefined') { %><div class="alert alert-error"><%= error %></div><% } %>
+
+    <form method="post" action="/signup">
+
+      <%- include('../partials/csrf-field') %>
+
+      <div class="form-group"><label>نام کامل</label><input class="form-control" name="fullName" required value="<%= (form && form.fullName) || '' %>" /></div>
+
+      <div class="form-group"><label>ایمیل</label><input class="form-control" type="email" name="email" required value="<%= (form && form.email) || '' %>" /></div>
+
+      <div class="form-group"><label>موبایل (۰۹xxxxxxxxx)</label><input class="form-control" name="mobile" required pattern="09[0-9]{9}" value="<%= (form && form.mobile) || '' %>" /></div>
+
+      <div class="form-group"><label>رمز عبور</label><input class="form-control" type="password" name="password" required minlength="8" /></div>
+
+      <div class="form-group"><label>تکرار رمز</label><input class="form-control" type="password" name="passwordConfirm" required /></div>
+
+      <div class="form-group"><label>کپچا: <span id="captcha-question">...</span></label><input class="form-control" name="captcha" required /></div>
+
+      <input type="hidden" name="referralCode" value="<%= (typeof referralRef !== 'undefined' && referralRef) || (form && form.referralCode) || '' %>" />
+
+      <label><input type="checkbox" name="terms" required /> قوانین را می‌پذیرم</label>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1rem">ثبت‌نام</button>
+
+    </form>
+
+    <p style="text-align:center;margin-top:1rem"><a href="/login">قبلاً ثبت‌نام کرده‌اید؟ وارد شوید</a></p>
+
+  </div>
+
+</div>
+
+<%- include('../partials/layout-end') %>
+

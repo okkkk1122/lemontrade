@@ -1,0 +1,10 @@
+<%- include('../partials/layout-start') %>
+<h1><%= userPackage.package.title %></h1>
+<% userPackage.package.lessons.forEach((l, i) => { %>
+  <div class="card" style="margin:0.75rem 0">
+    <h4>جلسه <%= i+1 %>: <%= l.title %></h4>
+    <% if (l.videoUrl) { %><video controls src="<%= l.videoUrl %>" style="width:100%;max-height:400px"></video><% } %>
+    <% if (l.fileUrl && l.allowDownload) { %><a href="<%= l.fileUrl %>" download class="btn btn-sm btn-outline">دانلود</a><% } %>
+  </div>
+<% }) %>
+<%- include('../partials/layout-end') %>

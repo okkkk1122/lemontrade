@@ -1,0 +1,37 @@
+<%- include('../partials/layout-start') %>
+<h1>پروفایل</h1>
+<% if (typeof saved !== 'undefined' && saved) { %><div class="alert alert-success">ذخیره شد</div><% } %>
+<form method="post" class="card" style="margin:1rem 0">
+      <%- include('../partials/csrf-field') %>
+  <div class="form-group"><label>نام</label><input class="form-control" name="fullName" value="<%= user.fullName %>" /></div>
+  <div class="form-group"><label>ایمیل</label><input class="form-control" value="<%= user.email %>" disabled /></div>
+  <div class="form-group"><label>موبایل</label><input class="form-control" name="mobile" value="<%= user.mobile %>" /></div>
+  <p style="color:var(--text-muted)">عضویت: <%= persianDate(user.createdAt) %></p>
+  <p>۲FA: <%= user.twoFactorEnabled ? 'فعال' : 'غیرفعال' %></p>
+  <button class="btn btn-primary">ذخیره</button>
+</form>
+<h2>تغییر رمز</h2>
+<form method="post" action="/profile/password" class="card">
+      <%- include('../partials/csrf-field') %>
+  <input class="form-control" type="password" name="currentPassword" placeholder="رمز فعلی" required style="margin-bottom:0.5rem" />
+  <input class="form-control" type="password" name="newPassword" placeholder="رمز جدید" required style="margin-bottom:0.5rem" />
+  <input class="form-control" type="password" name="newPasswordConfirm" placeholder="تکرار" required style="margin-bottom:0.5rem" />
+  <button class="btn btn-outline">تغییر رمز</button>
+</form>
+<h2 class="section-title">دستگاه‌ها</h2>
+<% devices.forEach(d => { %>
+  <div class="card" style="margin:0.5rem 0;display:flex;justify-content:space-between">
+    <span><%= d.name %> — <%= d.browser %> — <%= d.ip %></span>
+    <form method="post" action="/profile/devices/<%= d.id %>/remove">
+      <%- include('../partials/csrf-field') %>
+      <button class="btn btn-sm btn-danger">حذف</button>
+    </form>
+  </div>
+<% }) %>
+<h2>تاریخچه اشتراک</h2>
+<div class="table-wrap"><table><thead><tr><th>از</th><th>تا</th><th>مبلغ</th><th>وضعیت</th></tr></thead><tbody>
+<% subscriptions.forEach(s => { %><tr><td><%= new Date(s.startDate).toLocaleDateString('fa-IR') %></td><td><%= new Date(s.endDate).toLocaleDateString('fa-IR') %></td><td><%= s.amount %></td><td><%= s.status %></td></tr><% }) %>
+</tbody></table></div>
+<form method="post" action="/profile/delete-request" onsubmit="return confirm('حذف حساب؟')">
+      <%- include('../partials/csrf-field') %><button class="btn btn-danger btn-sm" style="margin-top:1rem">درخواست حذف حساب</button></form>
+<%- include('../partials/layout-end') %>

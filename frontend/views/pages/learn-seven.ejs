@@ -1,0 +1,26 @@
+<%- include('../partials/layout-start') %>
+<h1><%= path.title %></h1>
+<div class="learn-layout" style="margin-top:1.5rem">
+  <aside>
+    <% steps.forEach((s, i) => { %>
+      <a href="?step=<%= s.id %>" class="step-list-item <%= activeStep && activeStep.id === s.id ? 'active' : '' %>">
+        <strong>مرحله <%= i+1 %>: <%= s.title %></strong>
+        <div class="progress-bar" style="margin-top:0.35rem"><span style="width:<%= s.progress %>%"></span></div>
+      </a>
+    <% }) %>
+  </aside>
+  <section class="card">
+    <% if (activeStep) { %>
+      <h2><%= activeStep.title %></h2>
+      <% if (activeStep.videoUrl) { %>
+        <video controls style="width:100%;margin:1rem 0;border-radius:var(--radius)" src="<%= activeStep.videoUrl %>" id="learn-video"></video>
+      <% } %>
+      <div style="color:var(--text-muted)"><%- activeStep.content || '' %></div>
+      <% if (activeStep.exerciseFileUrl) { %><a href="<%= activeStep.exerciseFileUrl %>" class="btn btn-outline btn-sm" download>دانلود تمرین</a><% } %>
+      <% if (isLoggedIn) { %>
+        <button type="button" class="btn btn-secondary" style="margin-top:1rem" onclick="(function(){const csrf=document.querySelector('meta[name=csrf-token]')?.content;fetch('/learn/progress',{method:'POST',headers:{'Content-Type':'application/json','CSRF-Token':csrf||''},body:JSON.stringify({stepId:'<%= activeStep.id %>',completed:true})}).then(()=>location.reload())})()">علامت به عنوان دیده شده</button>
+      <% } %>
+    <% } %>
+  </section>
+</div>
+<%- include('../partials/layout-end') %>

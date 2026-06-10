@@ -1,0 +1,20 @@
+<%- include('../partials/layout-start') %>
+<div class="auth-page">
+  <div class="card auth-card">
+    <h1 style="text-align:center;margin-bottom:1rem">ورود</h1>
+    <% if (typeof error !== 'undefined') { %><div class="alert alert-error"><%= error %></div><% } %>
+    <% if (typeof query !== 'undefined' && query?.reset) { %><div class="alert alert-success">رمز با موفقیت تغییر کرد</div><% } %>
+    <form method="post" action="/login">
+      <%- include('../partials/csrf-field') %>
+      <input type="hidden" name="next" value="<%= next || '/dashboard' %>" />
+      <div class="form-group"><label>ایمیل یا موبایل</label><input class="form-control" name="identifier" required /></div>
+      <div class="form-group"><label>رمز عبور</label><input class="form-control" type="password" name="password" required /></div>
+      <label><input type="checkbox" name="remember" /> مرا به خاطر بسپار</label>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1rem">ورود</button>
+    </form>
+    <p style="text-align:center;margin-top:1rem">
+      <a href="/forgot-password">فراموشی رمز</a> · <a href="/signup">ایجاد حساب</a>
+    </p>
+  </div>
+</div>
+<%- include('../partials/layout-end') %>

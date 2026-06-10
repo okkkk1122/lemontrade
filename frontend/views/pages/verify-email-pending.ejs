@@ -1,0 +1,8 @@
+<%- include('../partials/layout-start') %>
+<div class="card auth-card" style="max-width:500px;margin:3rem auto;text-align:center">
+  <h1>تأیید ایمیل</h1>
+  <p style="margin:1rem 0;color:var(--text-muted)">لینک تأیید به ایمیل شما ارسال شد. لطفاً صندوق ورودی را بررسی کنید.</p>
+  <% if (typeof query !== 'undefined') { %><p class="alert alert-success">ایمیل مجدداً ارسال شد.</p><% } %>
+  <a href="/login" class="btn btn-primary">ورود به سایت</a>
+</div>
+<%- include('../partials/layout-end') %>

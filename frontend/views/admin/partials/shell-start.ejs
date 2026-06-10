@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | مدیریت لیموترید</title>
+  <% if (typeof csrfToken !== 'undefined' && csrfToken) { %><meta name="csrf-token" content="<%= csrfToken %>" /><% } %>
+  <link rel="stylesheet" href="/css/theme.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div style="padding:0 1.5rem 1rem;font-weight:700;color:#FFD700">🍋 لیموترید <span lang="en" style="font-size:0.75rem;opacity:0.85">lemontrade</span></div>
+    <a href="/admin">داشبورد</a>
+    <a href="/admin/settings">تنظیمات</a>
+    <a href="/admin/content">محتوا</a>
+    <a href="/admin/users">کاربران</a>
+    <a href="/admin/teachers">اساتید</a>
+    <a href="/admin/signals">سیگنال‌ها</a>
+    <a href="/admin/pairs">جفت‌ارزها</a>
+    <a href="/admin/subscriptions">اشتراک</a>
+    <a href="/admin/packages">پکیج‌ها</a>
+    <a href="/admin/blog">وبلاگ</a>
+    <a href="/admin/sessions">جلسات</a>
+    <a href="/admin/tickets">تیکت‌ها</a>
+    <a href="/admin/investments">سرمایه‌گذاری</a>
+    <a href="/" style="margin-top:2rem">← بازگشت به سایت</a>
+  </aside>
+  <main class="admin-main">
+    <% if (typeof saved !== 'undefined' && saved) { %>
+      <div class="admin-alert">✓ تغییرات با موفقیت ذخیره شد.</div>
+    <% } %>
