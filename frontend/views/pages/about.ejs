@@ -1,8 +1,13 @@
 <%- include('../partials/layout-start') %>
-<h1>درباره ما</h1>
-<div style="margin:1.5rem 0"><%- page?.content || '<p>لیموترید پلتفرم آموزش ترید و سیگنال‌دهی حرفه‌ای است.</p>' %></div>
-<h2>تیم</h2>
+<h1><%= page?.title || t('pages.about') %></h1>
+<div style="margin:1.5rem 0"><%- page?.content || '<p>' + t('footer.aboutDefault') + '</p>' %></div>
+<h2><%= t('about.team') %></h2>
 <div class="grid-3"><% (team || []).forEach(m => { %>
-  <div class="card" style="text-align:center"><h4><%= m.name %></h4><p><%= m.role %></p><p style="color:var(--text-muted)"><%= m.bio %></p></div>
+  <div class="card" style="text-align:center">
+    <img src="<%= m.photoUrl || '/images/team-member.svg' %>" alt="<%= m.name %>" class="team-photo" loading="lazy" />
+    <h4><%= m.name %></h4>
+    <p><%= m.role %></p>
+    <p style="color:var(--text-muted)"><%= m.bio %></p>
+  </div>
 <% }) %></div>
 <%- include('../partials/layout-end') %>

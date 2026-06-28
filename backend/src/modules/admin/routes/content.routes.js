@@ -3,10 +3,16 @@ const asyncHandler = require('../../../lib/asyncHandler');
 const prisma = require('../../../lib/prisma');
 const { csrfProtection } = require('../../../middleware/csrf');
 const { defaultSocialIcon } = require('../../../lib/socialIcons');
+const { buildTranslations, primaryFromTranslations } = require('../../../lib/localize');
 const { upload, publicUrl } = require('../upload');
 const { logAdmin, flashRedirect, parseBool, parseIntSafe, parseJsonField, toSlug } = require('../helpers');
 
 const router = express.Router();
+
+function i18nPayload(body, fields) {
+  const translations = buildTranslations(body, fields);
+  return { translations, ...primaryFromTranslations(translations, fields) };
+}
 
 router.get('/content', asyncHandler(async (req, res) => {
   const [sliders, paths, cards, pages, faqCats, menus, socials, team] = await Promise.all([
@@ -40,26 +46,24 @@ router.get('/content', asyncHandler(async (req, res) => {
 // --- Sliders ---
 router.post('/content/sliders', upload.single('image'), csrfProtection, asyncHandler(async (req, res) => {
   const imageUrl = req.file ? publicUrl(req.file.filename) : req.body.imageUrl || null;
+  const i18n = i18nPayload(req.body, ['title', 'subtitle', 'buttonText']);
   await prisma.slider.create({
     data: {
-      title: req.body.title,
-      subtitle: req.body.subtitle,
-      buttonText: req.body.buttonText,
+      ...i18n,
       buttonLink: req.body.buttonLink,
       imageUrl,
       sortOrder: parseIntSafe(req.body.sortOrder),
       isActive: parseBool(req.body.isActive ?? true),
     },
   });
-  await logAdmin(req.user.id, 'CREATE_SLIDER', req.body.title, req.ip);
+  await logAdmin(req.user.id, 'CREATE_SLIDER', req.body.title_fa || req.body.title, req.ip);
   flashRedirect(res, '/admin/content');
 }));
 
 router.post('/content/sliders/:id', upload.single('image'), csrfProtection, asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['title', 'subtitle', 'buttonText']);
   const data = {
-    title: req.body.title,
-    subtitle: req.body.subtitle,
-    buttonText: req.body.buttonText,
+    ...i18n,
     buttonLink: req.body.buttonLink,
     sortOrder: parseIntSafe(req.body.sortOrder),
     isActive: parseBool(req.body.isActive),
@@ -78,13 +82,13 @@ router.post('/content/sliders/:id/delete', asyncHandler(async (req, res) => {
 
 // --- Home cards ---
 router.post('/content/cards', asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['title', 'description', 'buttonText']);
   await prisma.homeCard.create({
     data: {
-      title: req.body.title,
-      description: req.body.description,
-      buttonText: req.body.buttonText,
+      ...i18n,
       buttonLink: req.body.buttonLink,
       icon: req.body.icon,
+      imageUrl: req.body.imageUrl || null,
       sortOrder: parseIntSafe(req.body.sortOrder),
       isActive: parseBool(req.body.isActive ?? true),
     },
@@ -98,14 +102,14 @@ router.post('/content/cards/:id/delete', asyncHandler(async (req, res) => {
 }));
 
 router.post('/content/cards/:id', asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['title', 'description', 'buttonText']);
   await prisma.homeCard.update({
     where: { id: req.params.id },
     data: {
-      title: req.body.title,
-      description: req.body.description,
-      buttonText: req.body.buttonText,
+      ...i18n,
       buttonLink: req.body.buttonLink,
       icon: req.body.icon,
+      imageUrl: req.body.imageUrl || undefined,
       sortOrder: parseIntSafe(req.body.sortOrder),
       isActive: parseBool(req.body.isActive),
     },
@@ -120,10 +124,13 @@ router.post('/content/cards/:id/delete', asyncHandler(async (req, res) => {
 
 // --- Static pages ---
 router.post('/content/pages/:id', asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['title', 'content']);
+  const existing = await prisma.pageContent.findUnique({ where: { id: req.params.id } });
+  const data = { ...(existing?.data || {}), translations: i18n.translations };
   await prisma.pageContent.upsert({
     where: { id: req.params.id },
-    create: { id: req.params.id, title: req.body.title, content: req.body.content },
-    update: { title: req.body.title, content: req.body.content },
+    create: { id: req.params.id, title: i18n.title, content: i18n.content, data },
+    update: { title: i18n.title, content: i18n.content, data },
   });
   flashRedirect(res, '/admin/content');
 }));
@@ -173,11 +180,11 @@ router.post('/content/faq-categories', asyncHandler(async (req, res) => {
 }));
 
 router.post('/content/faqs', asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['question', 'answer']);
   await prisma.faq.create({
     data: {
+      ...i18n,
       categoryId: req.body.categoryId,
-      question: req.body.question,
-      answer: req.body.answer,
       sortOrder: parseIntSafe(req.body.sortOrder),
       isActive: parseBool(req.body.isActive ?? true),
     },
@@ -186,11 +193,11 @@ router.post('/content/faqs', asyncHandler(async (req, res) => {
 }));
 
 router.post('/content/faqs/:id', asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['question', 'answer']);
   await prisma.faq.update({
     where: { id: req.params.id },
     data: {
-      question: req.body.question,
-      answer: req.body.answer,
+      ...i18n,
       sortOrder: parseIntSafe(req.body.sortOrder),
       isActive: parseBool(req.body.isActive),
       categoryId: req.body.categoryId,
@@ -206,10 +213,11 @@ router.post('/content/faqs/:id/delete', asyncHandler(async (req, res) => {
 
 // --- Menu ---
 router.post('/content/menus', asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['title']);
   await prisma.menuItem.create({
     data: {
+      ...i18n,
       menuType: req.body.menuType,
-      title: req.body.title,
       link: req.body.link,
       icon: req.body.icon,
       sortOrder: parseIntSafe(req.body.sortOrder),
@@ -221,10 +229,11 @@ router.post('/content/menus', asyncHandler(async (req, res) => {
 }));
 
 router.post('/content/menus/:id', asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['title']);
   await prisma.menuItem.update({
     where: { id: req.params.id },
     data: {
-      title: req.body.title,
+      ...i18n,
       link: req.body.link,
       icon: req.body.icon,
       sortOrder: parseIntSafe(req.body.sortOrder),
@@ -275,11 +284,10 @@ router.post('/content/social/:id/delete', asyncHandler(async (req, res) => {
 
 // --- Team ---
 router.post('/content/team', upload.single('photo'), csrfProtection, asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['name', 'role', 'bio']);
   await prisma.teamMember.create({
     data: {
-      name: req.body.name,
-      role: req.body.role,
-      bio: req.body.bio,
+      ...i18n,
       photoUrl: req.file ? publicUrl(req.file.filename) : req.body.photoUrl,
       sortOrder: parseIntSafe(req.body.sortOrder),
     },
@@ -288,10 +296,9 @@ router.post('/content/team', upload.single('photo'), csrfProtection, asyncHandle
 }));
 
 router.post('/content/team/:id', upload.single('photo'), csrfProtection, asyncHandler(async (req, res) => {
+  const i18n = i18nPayload(req.body, ['name', 'role', 'bio']);
   const data = {
-    name: req.body.name,
-    role: req.body.role,
-    bio: req.body.bio,
+    ...i18n,
     sortOrder: parseIntSafe(req.body.sortOrder),
   };
   if (req.file) data.photoUrl = publicUrl(req.file.filename);

@@ -1,0 +1,6 @@
+<% const cur = typeof locale !== 'undefined' ? locale : 'fa'; %>
+<div class="locale-switcher" role="navigation" aria-label="<%= typeof t === 'function' ? t('common.language') : 'Language' %>">
+  <a href="/api/locale?locale=fa&redirect=<%= encodeURIComponent(currentPath || '/') %>" class="<%= cur === 'fa' ? 'active' : '' %>" title="فارسی">فا</a>
+  <a href="/api/locale?locale=ar&redirect=<%= encodeURIComponent(currentPath || '/') %>" class="<%= cur === 'ar' ? 'active' : '' %>" title="العربية">ع</a>
+  <a href="/api/locale?locale=en&redirect=<%= encodeURIComponent(currentPath || '/') %>" class="<%= cur === 'en' ? 'active' : '' %>" title="English">EN</a>
+</div>

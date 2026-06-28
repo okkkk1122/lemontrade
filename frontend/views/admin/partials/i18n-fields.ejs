@@ -1,0 +1,24 @@
+<% function i18nVal(record, field, loc) {
+  var tr = record.translations;
+  if (!tr && record.data && record.data.translations) tr = record.data.translations;
+  if (tr && tr[loc] && tr[loc][field]) return tr[loc][field];
+  return loc === 'fa' ? (record[field] || '') : '';
+} %>
+<% (fields || []).forEach(function(field) {
+  var isLong = field === 'content' || field === 'description' || field === 'bio' || field === 'answer';
+%>
+  <div style="margin:0.5rem 0">
+    <label style="display:block;margin-bottom:0.25rem;color:#93c5fd"><%= field %></label>
+    <div class="admin-form-row" style="flex-direction:column;gap:0.35rem">
+      <% if (isLong) { %>
+        <textarea name="<%= field %>_fa" rows="3" placeholder="فارسی"><%= i18nVal(record, field, 'fa') %></textarea>
+        <textarea name="<%= field %>_ar" rows="3" placeholder="عربی" dir="rtl"><%= i18nVal(record, field, 'ar') %></textarea>
+        <textarea name="<%= field %>_en" rows="3" placeholder="English" dir="ltr"><%= i18nVal(record, field, 'en') %></textarea>
+      <% } else { %>
+        <input name="<%= field %>_fa" value="<%= i18nVal(record, field, 'fa') %>" placeholder="فارسی" />
+        <input name="<%= field %>_ar" value="<%= i18nVal(record, field, 'ar') %>" placeholder="عربی" dir="rtl" />
+        <input name="<%= field %>_en" value="<%= i18nVal(record, field, 'en') %>" placeholder="English" dir="ltr" />
+      <% } %>
+    </div>
+  </div>
+<% }); %>

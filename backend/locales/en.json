@@ -1,0 +1,101 @@
+{
+  "nav": {
+    "home": "Home",
+    "learn": "Learn",
+    "packages": "Packages",
+    "sessions": "Live Sessions",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "about": "About",
+    "contact": "Contact",
+    "liveSignals": "Live Signals",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "admin": "Admin",
+    "teacherPanel": "Teacher Panel",
+    "wallet": "Wallet"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "colorful": "Colorful"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "contact": "Contact",
+    "social": "Social Media",
+    "investment": "Investment",
+    "email": "Email",
+    "phone": "Phone",
+    "trust": "Trust Seal · SSL · Zarinpal",
+    "aboutDefault": "Professional platform for trading education, live signals, and investment fund for traders."
+  },
+  "home": {
+    "title": "Home",
+    "heroTitle": "Lemontrade — Pro Trading Education & Signals",
+    "heroSubtitle": "From zero to pro: live signals, courses, and investment fund",
+    "heroCta": "Start Free",
+    "services": "Core Services",
+    "sampleSignals": "Sample Signals",
+    "topTeachers": "Top Teachers",
+    "stats": "Site Statistics",
+    "upcomingSessions": "Upcoming Sessions",
+    "faq": "FAQ",
+    "activeUsers": "Active Users",
+    "successfulSignals": "Successful Signals",
+    "avgProfit": "Avg. Profit %",
+    "sessionsHeld": "Sessions Held",
+    "entry": "Entry",
+    "teacher": "Teacher",
+    "viewDetails": "View Details",
+    "signalsCount": "signals",
+    "viewAllSessions": "View all sessions",
+    "viewAllFaq": "View all FAQ"
+  },
+  "blog": {
+    "search": "Search",
+    "views": "views",
+    "comments": "Comments",
+    "relatedPosts": "Related Posts",
+    "guest": "User",
+    "notFound": "Article not found"
+  },
+  "packages": {
+    "all": "All",
+    "details": "Details",
+    "addToCart": "Add to Cart",
+    "notFound": "Package not found",
+    "noAccess": "Access denied",
+    "myPackages": "My Packages"
+  },
+  "about": {
+    "team": "Team"
+  },
+  "common": {
+    "more": "More",
+    "continue": "Continue",
+    "view": "View",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "language": "Language"
+  },
+  "pages": {
+    "about": "About Us",
+    "contact": "Contact",
+    "terms": "Terms",
+    "blog": "Blog",
+    "packages": "Packages",
+    "faq": "FAQ",
+    "login": "Login",
+    "signup": "Sign Up",
+    "notFound": "Page Not Found",
+    "serverError": "Server Error"
+  },
+  "meta": {
+    "description": "Lemontrade — professional trading education, live signals, and investment platform"
+  }
+}

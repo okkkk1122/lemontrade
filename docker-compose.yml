@@ -3,17 +3,18 @@ services:
     image: postgres:16-alpine
     container_name: limootrade-db
     restart: unless-stopped
+    env_file: .env
     environment:
-      POSTGRES_USER: limootrade
-      POSTGRES_PASSWORD: limootrade_secret
-      POSTGRES_DB: limootrade
+      POSTGRES_USER: ${DB_USER:-limootrade}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-limootrade}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
-    ports:
-      - "5432:5432"
+    networks:
+      - lemontrade-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U limootrade -d limootrade"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-limootrade} -d ${DB_NAME:-limootrade}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -24,29 +25,51 @@ services:
       dockerfile: Dockerfile
     container_name: limootrade-app
     restart: unless-stopped
-    ports:
-      - "3010:3010"
+    env_file: .env
     environment:
       NODE_ENV: production
-      DISABLE_RATE_LIMIT: ${DISABLE_RATE_LIMIT:-true}
-      COOKIE_SECURE: "false"
-      PORT: 3010
-      DATABASE_URL: postgresql://limootrade:limootrade_secret@postgres:5432/limootrade
-      SESSION_SECRET: ${SESSION_SECRET:-lemontrade-dev-secret-min-32-characters-long}
-      APP_URL: http://localhost:3010
+      PORT: ${PORT:-3010}
+      DISABLE_RATE_LIMIT: ${DISABLE_RATE_LIMIT:-false}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      DATABASE_URL: ${DATABASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      APP_URL: ${APP_URL}
       ZARINPAL_MERCHANT: ${ZARINPAL_MERCHANT:-}
-      ZARINPAL_SANDBOX: ${ZARINPAL_SANDBOX:-true}
+      ZARINPAL_SANDBOX: ${ZARINPAL_SANDBOX:-false}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
-      SMTP_FROM: ${SMTP_FROM:-noreply@lemontrade.com}
+      SMTP_FROM: ${SMTP_FROM:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SKIP_SEED: ${SKIP_SEED:-true}
     volumes:
       - uploads_data:/app/frontend/public/uploads
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - lemontrade-network
+      - dokploy-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3010/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 90s
 
 volumes:
   postgres_data:
+    name: lemontrade_postgres_data
   uploads_data:
+    name: lemontrade_uploads_data
+
+networks:
+  lemontrade-network:
+    name: lemontrade-network
+    driver: bridge
+  dokploy-network:
+    external: true

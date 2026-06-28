@@ -7,16 +7,12 @@
     <div class="admin-card-item">
       <form method="post" action="/admin/content/sliders/<%= s.id %>" enctype="multipart/form-data" class="admin-form">
   <%- include('partials/csrf-field') %>
+        <%- include('partials/i18n-fields', { record: s, fields: ['title', 'subtitle', 'buttonText'] }) %>
         <div class="admin-form-row">
-          <div><label>عنوان</label><input name="title" value="<%= s.title %>" required /></div>
-          <div><label>زیرنویس</label><input name="subtitle" value="<%= s.subtitle || '' %>" /></div>
           <div><label>ترتیب</label><input name="sortOrder" type="number" value="<%= s.sortOrder %>" /></div>
         </div>
-        <label>متن دکمه / لینک</label>
-        <div class="admin-form-row">
-          <input name="buttonText" value="<%= s.buttonText || '' %>" placeholder="متن دکمه" />
-          <input name="buttonLink" value="<%= s.buttonLink || '' %>" placeholder="لینک" />
-        </div>
+        <label>لینک دکمه</label>
+        <input name="buttonLink" value="<%= s.buttonLink || '' %>" placeholder="لینک" />
         <label>تصویر (URL یا آپلود)</label>
         <input name="imageUrl" value="<%= s.imageUrl || '' %>" />
         <input type="file" name="image" accept="image/*" />
@@ -50,13 +46,12 @@
   <% cards.forEach(c => { %>
     <form method="post" action="/admin/content/cards/<%= c.id %>" class="admin-card-item admin-form">
   <%- include('partials/csrf-field') %>
+      <%- include('partials/i18n-fields', { record: c, fields: ['title', 'description', 'buttonText'] }) %>
       <div class="admin-form-row">
-        <input name="title" value="<%= c.title %>" />
-        <input name="buttonText" value="<%= c.buttonText || '' %>" placeholder="دکمه" />
         <input name="buttonLink" value="<%= c.buttonLink || '' %>" placeholder="لینک" />
+        <input name="imageUrl" value="<%= c.imageUrl || '' %>" placeholder="URL تصویر" />
         <input name="sortOrder" type="number" value="<%= c.sortOrder %>" />
       </div>
-      <textarea name="description"><%= c.description || '' %></textarea>
       <label><input type="checkbox" name="isActive" value="true" <%= c.isActive ? 'checked' : '' %> /> فعال</label>
       <button class="btn-admin btn-admin-primary">ذخیره</button>
     </form>
@@ -86,8 +81,7 @@
     <form method="post" action="/admin/content/pages/<%= item.id %>" class="admin-card-item admin-form">
   <%- include('partials/csrf-field') %>
       <h3><%= item.label %></h3>
-      <input name="title" value="<%= p.title || '' %>" />
-      <textarea name="content" rows="8"><%= p.content || '' %></textarea>
+      <%- include('partials/i18n-fields', { record: p, fields: ['title', 'content'] }) %>
       <button class="btn-admin btn-admin-primary">ذخیره صفحه</button>
     </form>
   <% }); %>

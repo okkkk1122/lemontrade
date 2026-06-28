@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" data-theme="dark">
+<html lang="<%= lang %>" dir="<%= dir %>" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="<%= (settings && settings.metaDescription) || (siteName + ' (' + siteNameEn + ')') %>" />
+  <meta name="description" content="<%= (settings && settings.metaDescription) || (typeof t === 'function' ? t('meta.description') : siteName) %>" />
   <meta name="application-name" content="<%= siteNameEn %>" />
   <% if (typeof csrfToken !== 'undefined' && csrfToken) { %><meta name="csrf-token" content="<%= csrfToken %>" /><% } %>
   <title><%= typeof title !== 'undefined' ? title + ' | ' : '' %><%= siteName %></title>

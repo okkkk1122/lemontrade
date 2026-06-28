@@ -151,37 +151,41 @@ model SiteSetting {
 }
 
 model Slider {
-  id          String  @id @default(uuid())
-  title       String
-  subtitle    String?
-  imageUrl    String?
-  buttonText  String?
-  buttonLink  String?
-  sortOrder   Int     @default(0)
-  isActive    Boolean @default(true)
+  id           String  @id @default(uuid())
+  title        String
+  subtitle     String?
+  imageUrl     String?
+  buttonText   String?
+  buttonLink   String?
+  sortOrder    Int     @default(0)
+  isActive     Boolean @default(true)
+  translations Json    @default("{}")
 }
 
 model MenuItem {
-  id         String  @id @default(uuid())
-  menuType   String  // header | footer
-  title      String
-  link       String
-  icon       String?
-  parentId   String?
-  sortOrder  Int     @default(0)
-  openNewTab Boolean @default(false)
-  isActive   Boolean @default(true)
+  id           String  @id @default(uuid())
+  menuType     String  // header | footer
+  title        String
+  link         String
+  icon         String?
+  parentId     String?
+  sortOrder    Int     @default(0)
+  openNewTab   Boolean @default(false)
+  isActive     Boolean @default(true)
+  translations Json    @default("{}")
 }
 
 model HomeCard {
-  id          String  @id @default(uuid())
-  title       String
-  description String?
-  buttonText  String?
-  buttonLink  String?
-  icon        String?
-  sortOrder   Int     @default(0)
-  isActive    Boolean @default(true)
+  id           String  @id @default(uuid())
+  title        String
+  description  String?
+  buttonText   String?
+  buttonLink   String?
+  icon         String?
+  imageUrl     String?
+  sortOrder    Int     @default(0)
+  isActive     Boolean @default(true)
+  translations Json    @default("{}")
 }
 
 model SiteStat {
@@ -334,34 +338,36 @@ model CartItem {
 }
 
 model PackageCategory {
-  id        String    @id @default(uuid())
-  name      String
-  slug      String    @unique
-  sortOrder Int       @default(0)
-  packages  Package[]
+  id           String    @id @default(uuid())
+  name         String
+  slug         String    @unique
+  sortOrder    Int       @default(0)
+  translations Json      @default("{}")
+  packages     Package[]
 }
 
 model Package {
-  id           String          @id @default(uuid())
-  title        String
-  slug         String          @unique
-  shortDesc    String?
-  fullDesc     String?
-  price        Int
+  id              String           @id @default(uuid())
+  title           String
+  slug            String           @unique
+  shortDesc       String?
+  fullDesc        String?
+  price           Int
   discountPercent Int?
-  discountStart DateTime?
-  discountEnd   DateTime?
-  coverImageUrl String?
-  categoryId   String?
-  category     PackageCategory? @relation(fields: [categoryId], references: [id])
-  isActive     Boolean         @default(true)
-  syllabus     Json            @default("[]")
-  lessons      PackageLesson[]
-  cartItems    CartItem[]
-  userPackages UserPackage[]
-  reviews      PackageReview[]
-  salesCount   Int             @default(0)
-  createdAt    DateTime        @default(now())
+  discountStart   DateTime?
+  discountEnd     DateTime?
+  coverImageUrl   String?
+  categoryId      String?
+  category        PackageCategory? @relation(fields: [categoryId], references: [id])
+  isActive        Boolean          @default(true)
+  syllabus        Json             @default("[]")
+  translations    Json             @default("{}")
+  lessons         PackageLesson[]
+  cartItems       CartItem[]
+  userPackages    UserPackage[]
+  reviews         PackageReview[]
+  salesCount      Int              @default(0)
+  createdAt       DateTime         @default(now())
 }
 
 model PackageLesson {
@@ -416,6 +422,7 @@ model LearningStep {
   sortOrder     Int
   isActive      Boolean          @default(true)
   isArchived    Boolean          @default(false)
+  translations  Json             @default("{}")
   progress      UserStepProgress[]
 }
 
@@ -441,6 +448,7 @@ model LiveSession {
   roomLink     String?
   status       String   @default("scheduled")
   recordingUrl String?
+  translations Json     @default("{}")
   reminders    SessionReminder[]
 }
 
@@ -455,44 +463,48 @@ model SessionReminder {
 }
 
 model FaqCategory {
-  id    String @id @default(uuid())
-  name  String
-  slug  String @unique
-  faqs  Faq[]
+  id           String @id @default(uuid())
+  name         String
+  slug         String @unique
+  translations Json   @default("{}")
+  faqs         Faq[]
 }
 
 model Faq {
-  id         String      @id @default(uuid())
-  categoryId String
-  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  question   String
-  answer     String
-  sortOrder  Int         @default(0)
-  isActive   Boolean     @default(true)
+  id           String      @id @default(uuid())
+  categoryId   String
+  category     FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  question     String
+  answer       String
+  sortOrder    Int         @default(0)
+  isActive     Boolean     @default(true)
+  translations Json        @default("{}")
 }
 
 model BlogCategory {
-  id    String     @id @default(uuid())
-  name  String
-  slug  String     @unique
-  posts BlogPost[]
+  id           String     @id @default(uuid())
+  name         String
+  slug         String     @unique
+  translations Json       @default("{}")
+  posts        BlogPost[]
 }
 
 model BlogPost {
-  id          String       @id @default(uuid())
-  title       String
-  slug        String       @unique
-  excerpt     String?
-  content     String
-  coverImage  String?
-  categoryId  String?
-  category    BlogCategory? @relation(fields: [categoryId], references: [id])
-  authorName  String
-  views       Int          @default(0)
-  status      String       @default("published")
-  publishedAt DateTime     @default(now())
-  tags        String[]     @default([])
-  comments    BlogComment[]
+  id           String        @id @default(uuid())
+  title        String
+  slug         String        @unique
+  excerpt      String?
+  content      String
+  coverImage   String?
+  categoryId   String?
+  category     BlogCategory? @relation(fields: [categoryId], references: [id])
+  authorName   String
+  views        Int           @default(0)
+  status       String        @default("published")
+  publishedAt  DateTime      @default(now())
+  tags         String[]      @default([])
+  translations Json          @default("{}")
+  comments     BlogComment[]
 }
 
 model BlogComment {
@@ -502,6 +514,7 @@ model BlogComment {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   content   String
+  locale    String   @default("fa")
   approved  Boolean  @default(false)
   createdAt DateTime @default(now())
 }
@@ -515,12 +528,13 @@ model PageContent {
 }
 
 model TeamMember {
-  id        String  @id @default(uuid())
-  name      String
-  role      String
-  bio       String?
-  photoUrl  String?
-  sortOrder Int     @default(0)
+  id           String  @id @default(uuid())
+  name         String
+  role         String
+  bio          String?
+  photoUrl     String?
+  sortOrder    Int     @default(0)
+  translations Json    @default("{}")
 }
 
 model ContactMessage {

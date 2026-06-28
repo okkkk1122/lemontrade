@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" fill="none">
+  <rect width="600" height="340" rx="12" fill="#0f172a"/>
+  <rect x="40" y="40" width="520" height="200" rx="8" fill="#161B22" stroke="#3B82F6" stroke-width="2"/>
+  <rect x="60" y="70" width="120" height="8" rx="4" fill="#3B82F6"/>
+  <rect x="60" y="90" width="200" height="6" rx="3" fill="#30363d"/>
+  <rect x="60" y="110" width="160" height="6" rx="3" fill="#30363d"/>
+  <circle cx="480" cy="140" r="40" fill="#10B981" opacity="0.25"/>
+  <text x="300" y="300" text-anchor="middle" fill="#64748b" font-size="16" font-family="sans-serif">Package</text>
+</svg>

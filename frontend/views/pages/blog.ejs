@@ -1,12 +1,13 @@
 <%- include('../partials/layout-start') %>
-<h1>وبلاگ</h1>
-<form method="get" style="margin:1rem 0;display:flex;gap:0.5rem"><input class="form-control" name="q" placeholder="جستجو" /><button class="btn btn-primary btn-sm">جستجو</button></form>
+<h1><%= t('pages.blog') %></h1>
+<form method="get" style="margin:1rem 0;display:flex;gap:0.5rem"><input class="form-control" name="q" placeholder="<%= t('blog.search') %>" value="<%= typeof q !== 'undefined' ? q : '' %>" /><button class="btn btn-primary btn-sm"><%= t('blog.search') %></button></form>
 <div class="grid-3">
   <% posts.forEach(p => { %>
     <a href="/blog/<%= p.slug %>" class="card" style="display:block">
+      <img src="<%= p.coverImage || '/images/blog-cover.svg' %>" alt="<%= p.title %>" class="blog-card-cover" loading="lazy" />
       <h3><%= p.title %></h3>
       <p style="color:var(--text-muted)"><%= p.excerpt %></p>
-      <small><%= p.authorName %> · <%= new Date(p.publishedAt).toLocaleDateString('fa-IR') %> · <%= p.views %> بازدید</small>
+      <small><%= p.authorName %> · <%= new Date(p.publishedAt).toLocaleDateString(dateLocale) %> · <%= p.views %> <%= t('blog.views') %></small>
     </a>
   <% }) %>
 </div>

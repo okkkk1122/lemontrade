@@ -2,9 +2,9 @@
   <div class="container header-inner">
     <a href="/" class="logo-link">
       <img src="/logo.png" alt="<%= siteName %>" width="48" height="48" />
-      <span><%= siteName %><small class="brand-en" lang="en"> <%= siteNameEn %></small></span>
+      <span><%= siteName %><% if (locale !== 'en') { %><small class="brand-en" lang="en"> <%= siteNameEn %></small><% } %></span>
     </a>
-    <button class="hamburger" id="nav-toggle" aria-label="منو">☰</button>
+    <button class="hamburger" id="nav-toggle" aria-label="<%= t('nav.home') %>">☰</button>
     <nav class="nav-main" id="nav-main">
       <% headerMenu.forEach(function(item) {
         const path = item.link.split('?')[0];
@@ -13,15 +13,16 @@
         <a href="<%= item.link %>" class="<%= active ? 'active' : '' %>" <%= item.openNewTab ? 'target="_blank" rel="noopener"' : '' %>><%= item.title %></a>
       <% }); %>
       <% if (isLoggedIn) { %>
-        <a href="/signals/live" class="<%= currentPath.startsWith('/signals') ? 'active' : '' %>">سیگنال زنده</a>
-        <a href="/dashboard" class="<%= currentPath === '/dashboard' ? 'active' : '' %>">داشبورد</a>
+        <a href="/signals/live" class="<%= currentPath.startsWith('/signals') ? 'active' : '' %>"><%= t('nav.liveSignals') %></a>
+        <a href="/dashboard" class="<%= currentPath === '/dashboard' ? 'active' : '' %>"><%= t('nav.dashboard') %></a>
       <% } %>
     </nav>
     <div class="header-actions">
+      <%- include('locale-switcher') %>
       <div class="theme-switcher">
-        <button type="button" data-theme-set="light">روشن</button>
-        <button type="button" data-theme-set="dark">تیره</button>
-        <button type="button" data-theme-set="colorful">رنگی</button>
+        <button type="button" data-theme-set="light"><%= t('theme.light') %></button>
+        <button type="button" data-theme-set="dark"><%= t('theme.dark') %></button>
+        <button type="button" data-theme-set="colorful"><%= t('theme.colorful') %></button>
       </div>
       <div class="social-icons">
         <% if (socialLinks && socialLinks.length) { %>
@@ -41,17 +42,17 @@
         <% } %>
       </div>
       <% if (isLoggedIn) { %>
-        <a href="/wallet" class="btn btn-sm btn-outline" title="کیف پول">💰</a>
+        <a href="/wallet" class="btn btn-sm btn-outline" title="<%= t('nav.wallet') %>">💰</a>
         <% if (user.role === 'ADMIN' || user.role === 'FINANCE_ADMIN' || user.role === 'CONTENT_ADMIN' || user.role === 'SUPPORT_ADMIN') { %>
-          <a href="/admin" class="btn btn-sm btn-outline">مدیریت</a>
+          <a href="/admin" class="btn btn-sm btn-outline"><%= t('nav.admin') %></a>
         <% } %>
         <% if (user.role === 'TEACHER') { %>
-          <a href="/teacher" class="btn btn-sm btn-outline">پنل استاد</a>
+          <a href="/teacher" class="btn btn-sm btn-outline"><%= t('nav.teacherPanel') %></a>
         <% } %>
-        <a href="/logout" class="btn btn-sm btn-outline">خروج</a>
+        <a href="/logout" class="btn btn-sm btn-outline"><%= t('nav.logout') %></a>
       <% } else { %>
-        <a href="/login" class="btn btn-sm btn-outline">ورود</a>
-        <a href="/signup" class="btn btn-sm btn-primary">ثبت‌نام</a>
+        <a href="/login" class="btn btn-sm btn-outline"><%= t('nav.login') %></a>
+        <a href="/signup" class="btn btn-sm btn-primary"><%= t('nav.signup') %></a>
       <% } %>
     </div>
   </div>

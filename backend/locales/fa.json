@@ -1,0 +1,101 @@
+{
+  "nav": {
+    "home": "خانه",
+    "learn": "آموزش",
+    "packages": "پکیج‌ها",
+    "sessions": "جلسات زنده",
+    "blog": "وبلاگ",
+    "faq": "سوالات",
+    "about": "درباره ما",
+    "contact": "تماس",
+    "liveSignals": "سیگنال زنده",
+    "dashboard": "داشبورد",
+    "login": "ورود",
+    "signup": "ثبت‌نام",
+    "logout": "خروج",
+    "admin": "مدیریت",
+    "teacherPanel": "پنل استاد",
+    "wallet": "کیف پول"
+  },
+  "theme": {
+    "light": "روشن",
+    "dark": "تیره",
+    "colorful": "رنگی"
+  },
+  "footer": {
+    "quickLinks": "لینک‌های سریع",
+    "services": "خدمات",
+    "contact": "تماس",
+    "social": "شبکه‌های اجتماعی",
+    "investment": "سرمایه‌گذاری",
+    "email": "ایمیل",
+    "phone": "تلفن",
+    "trust": "اینماد · SSL · زرین‌پال",
+    "aboutDefault": "پلتفرم حرفه‌ای آموزش ترید، سیگنال زنده و صندوق سرمایه‌گذاری برای تریدرهای ایرانی."
+  },
+  "home": {
+    "title": "صفحه اصلی",
+    "heroTitle": "لیموترید — آموزش و سیگنال حرفه‌ای",
+    "heroSubtitle": "از صفر تا صد ترید، سیگنال زنده و صندوق سرمایه‌گذاری",
+    "heroCta": "شروع رایگان",
+    "services": "خدمات اصلی",
+    "sampleSignals": "سیگنال‌های نمونه",
+    "topTeachers": "برترین اساتید",
+    "stats": "آمار سایت",
+    "upcomingSessions": "جلسات پیش‌رو",
+    "faq": "سوالات متداول",
+    "activeUsers": "کاربر فعال",
+    "successfulSignals": "سیگنال موفق",
+    "avgProfit": "٪ سود میانگین",
+    "sessionsHeld": "جلسه برگزار شده",
+    "entry": "ورود",
+    "teacher": "استاد",
+    "viewDetails": "مشاهده جزئیات",
+    "signalsCount": "سیگنال",
+    "viewAllSessions": "مشاهده همه جلسات",
+    "viewAllFaq": "مشاهده همه سوالات"
+  },
+  "blog": {
+    "search": "جستجو",
+    "views": "بازدید",
+    "comments": "نظرات",
+    "relatedPosts": "مقالات مرتبط",
+    "guest": "کاربر",
+    "notFound": "مقاله یافت نشد"
+  },
+  "packages": {
+    "all": "همه",
+    "details": "جزئیات",
+    "addToCart": "افزودن به سبد",
+    "notFound": "پکیج یافت نشد",
+    "noAccess": "دسترسی ندارید",
+    "myPackages": "پکیج‌های من"
+  },
+  "about": {
+    "team": "تیم"
+  },
+  "common": {
+    "more": "بیشتر",
+    "continue": "ادامه",
+    "view": "مشاهده",
+    "save": "ذخیره",
+    "cancel": "انصراف",
+    "back": "بازگشت",
+    "language": "زبان"
+  },
+  "pages": {
+    "about": "درباره ما",
+    "contact": "تماس با ما",
+    "terms": "قوانین",
+    "blog": "وبلاگ",
+    "packages": "پکیج‌ها",
+    "faq": "سوالات متداول",
+    "login": "ورود",
+    "signup": "ثبت‌نام",
+    "notFound": "صفحه یافت نشد",
+    "serverError": "خطای سرور"
+  },
+  "meta": {
+    "description": "لیموترید — پلتفرم حرفه‌ای آموزش ترید، سیگنال زنده و سرمایه‌گذاری"
+  }
+}

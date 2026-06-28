@@ -3,40 +3,40 @@
     <div>
       <a href="/" class="logo-link">
         <img src="/logo.png" alt="<%= siteName %>" width="40" height="40" />
-        <span><%= siteName %> <span class="brand-en" lang="en"><%= siteNameEn %></span></span>
+        <span><%= siteName %> <% if (locale !== 'en') { %><span class="brand-en" lang="en"><%= siteNameEn %></span><% } %></span>
       </a>
       <p style="margin-top:1rem;color:var(--text-muted)">
-        <%= settings.siteDescription || 'پلتفرم حرفه‌ای آموزش ترید، سیگنال زنده و صندوق سرمایه‌گذاری برای تریدرهای ایرانی.' %>
+        <%= settings.siteDescription || t('footer.aboutDefault') %>
       </p>
     </div>
     <div>
-      <h4>لینک‌های سریع</h4>
+      <h4><%= t('footer.quickLinks') %></h4>
       <% if (footerMenu && footerMenu.length) { %>
         <% footerMenu.forEach(function(item) { %>
           <p><a href="<%= item.link %>" <%= item.openNewTab ? 'target="_blank"' : '' %>><%= item.title %></a></p>
         <% }); %>
       <% } else { %>
-        <p><a href="/about">درباره ما</a></p>
-        <p><a href="/contact">تماس با ما</a></p>
-        <p><a href="/terms">قوانین</a></p>
-        <p><a href="/faq">پشتیبانی</a></p>
+        <p><a href="/about"><%= t('nav.about') %></a></p>
+        <p><a href="/contact"><%= t('nav.contact') %></a></p>
+        <p><a href="/terms"><%= t('pages.terms') %></a></p>
+        <p><a href="/faq"><%= t('pages.faq') %></a></p>
       <% } %>
     </div>
     <div>
-      <h4>خدمات</h4>
-      <p><a href="/signals/live">سیگنال زنده</a></p>
-      <p><a href="/learn/zero-to-hundred">آموزش</a></p>
-      <p><a href="/packages">پکیج‌ها</a></p>
-      <p><a href="/investment">سرمایه‌گذاری</a></p>
+      <h4><%= t('footer.services') %></h4>
+      <p><a href="/signals/live"><%= t('nav.liveSignals') %></a></p>
+      <p><a href="/learn/zero-to-hundred"><%= t('nav.learn') %></a></p>
+      <p><a href="/packages"><%= t('nav.packages') %></a></p>
+      <p><a href="/investment"><%= t('footer.investment') %></a></p>
     </div>
     <div>
-      <h4>تماس</h4>
-      <p>ایمیل: <a href="mailto:<%= typeof contactEmail !== 'undefined' ? contactEmail : 'support@lemontrade.com' %>"><%= typeof contactEmail !== 'undefined' ? contactEmail : 'support@lemontrade.com' %></a></p>
-      <p>تلفن: <a href="tel:<%= typeof contactPhone !== 'undefined' ? contactPhone : '۰۲۱-۹۱۰۰۰۰۰۰' %>"><%= typeof contactPhone !== 'undefined' ? contactPhone : '۰۲۱-۹۱۰۰۰۰۰۰' %></a></p>
+      <h4><%= t('footer.contact') %></h4>
+      <p><%= t('footer.email') %>: <a href="mailto:<%= typeof contactEmail !== 'undefined' ? contactEmail : 'support@lemontrade.com' %>"><%= typeof contactEmail !== 'undefined' ? contactEmail : 'support@lemontrade.com' %></a></p>
+      <p><%= t('footer.phone') %>: <a href="tel:<%= typeof contactPhone !== 'undefined' ? contactPhone : '۰۲۱-۹۱۰۰۰۰۰۰' %>"><%= typeof contactPhone !== 'undefined' ? contactPhone : '۰۲۱-۹۱۰۰۰۰۰۰' %></a></p>
       <p><%= typeof contactAddress !== 'undefined' ? contactAddress : 'تهران، ایران' %></p>
       <% if (socialLinks && socialLinks.length) { %>
         <div class="footer-social" style="margin-top:1rem">
-          <p style="margin-bottom:0.5rem;font-weight:600">شبکه‌های اجتماعی</p>
+          <p style="margin-bottom:0.5rem;font-weight:600"><%= t('footer.social') %></p>
           <div class="social-icons">
             <% socialLinks.forEach(function(s) { %>
               <%- include('social-link', { link: s }) %>
@@ -44,7 +44,7 @@
           </div>
         </div>
       <% } %>
-      <p style="margin-top:1rem;font-size:0.8rem;color:var(--text-muted)">اینماد · SSL · زرین‌پال</p>
+      <p style="margin-top:1rem;font-size:0.8rem;color:var(--text-muted)"><%= t('footer.trust') %></p>
     </div>
   </div>
   <div class="container" style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;color:var(--text-muted)">

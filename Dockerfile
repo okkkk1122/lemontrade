@@ -2,7 +2,7 @@ FROM node:20-bookworm-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates \
+RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates wget \
   && rm -rf /var/lib/apt/lists/*
 
 COPY backend/package.json backend/package-lock.json ./backend/
@@ -15,4 +15,4 @@ COPY frontend/ /app/frontend/
 ENV NODE_ENV=production
 EXPOSE 3010
 
-CMD ["sh", "-c", "if [ \"$SKIP_SEED\" != \"true\" ]; then node prisma/seed.js; fi && exec node src/index.js"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma db push --accept-data-loss && (node prisma/seed.js || true) && exec node src/index.js"]

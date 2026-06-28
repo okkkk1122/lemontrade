@@ -8,6 +8,7 @@ const config = require('./config');
 const { loadUser } = require('./middleware/auth');
 const { loadSettings } = require('./middleware/settings');
 const { loadSiteData } = require('./middleware/siteData');
+const { loadI18n } = require('./middleware/i18n');
 const { applyCsrf, exposeCsrfToken, csrfErrorHandler } = require('./middleware/csrf');
 const { resolveSocialIconSrc } = require('./lib/socialIcons');
 
@@ -66,6 +67,7 @@ app.use(
 );
 
 app.use(express.static(path.join(config.paths.frontend, 'public')));
+app.use(loadI18n);
 app.use(loadSettings);
 app.use(loadSiteData);
 app.use(loadUser);

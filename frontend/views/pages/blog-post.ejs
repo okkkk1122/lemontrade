@@ -1,9 +1,20 @@
 <%- include('../partials/layout-start') %>
 <article>
+  <% if (post.coverImage) { %><img src="<%= post.coverImage %>" alt="<%= post.title %>" class="blog-card-cover" style="height:240px;margin-bottom:1rem" loading="lazy" /><% } %>
   <h1><%= post.title %></h1>
-  <p style="color:var(--text-muted)"><%= post.authorName %> · <%= new Date(post.publishedAt).toLocaleDateString('fa-IR') %></p>
+  <p style="color:var(--text-muted)"><%= post.authorName %> · <%= new Date(post.publishedAt).toLocaleDateString(dateLocale) %></p>
   <div class="card" style="margin:1.5rem 0"><%- post.content %></div>
 </article>
-<h2>مقالات مرتبط</h2>
+<% if (post.comments && post.comments.length) { %>
+<h2><%= t('blog.comments') %></h2>
+<% post.comments.forEach(c => { %>
+  <div class="card" style="margin-bottom:0.5rem">
+    <strong><%= c.user?.fullName || t('blog.guest') %></strong>
+    <span style="color:var(--text-muted);font-size:0.85rem"> · <%= new Date(c.createdAt).toLocaleDateString(dateLocale) %></span>
+    <p style="margin-top:0.5rem"><%= c.content %></p>
+  </div>
+<% }) %>
+<% } %>
+<h2><%= t('blog.relatedPosts') %></h2>
 <div class="grid-3"><% related.forEach(r => { %><a href="/blog/<%= r.slug %>" class="card"><%= r.title %></a><% }) %></div>
 <%- include('../partials/layout-end') %>

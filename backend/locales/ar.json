@@ -1,0 +1,101 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "learn": "التعليم",
+    "packages": "الباقات",
+    "sessions": "جلسات مباشرة",
+    "blog": "المدونة",
+    "faq": "الأسئلة",
+    "about": "من نحن",
+    "contact": "اتصل بنا",
+    "liveSignals": "إشارات مباشرة",
+    "dashboard": "لوحة التحكم",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "logout": "تسجيل الخروج",
+    "admin": "الإدارة",
+    "teacherPanel": "لوحة المعلم",
+    "wallet": "المحفظة"
+  },
+  "theme": {
+    "light": "فاتح",
+    "dark": "داكن",
+    "colorful": "ملون"
+  },
+  "footer": {
+    "quickLinks": "روابط سريعة",
+    "services": "الخدمات",
+    "contact": "اتصل بنا",
+    "social": "الشبكات الاجتماعية",
+    "investment": "الاستثمار",
+    "email": "البريد",
+    "phone": "الهاتف",
+    "trust": "شهادة · SSL · زرين‌پال",
+    "aboutDefault": "منصة احترافية لتعليم التداول والإشارات المباشرة وصندوق الاستثمار للمتداولين."
+  },
+  "home": {
+    "title": "الرئيسية",
+    "heroTitle": "ليموتريد — تعليم وإشارات احترافية",
+    "heroSubtitle": "من الصفر إلى الاحتراف: تداول، إشارات مباشرة وصندوق استثمار",
+    "heroCta": "ابدأ مجاناً",
+    "services": "الخدمات الرئيسية",
+    "sampleSignals": "إشارات نموذجية",
+    "topTeachers": "أفضل المعلمين",
+    "stats": "إحصائيات الموقع",
+    "upcomingSessions": "الجلسات القادمة",
+    "faq": "الأسئلة الشائعة",
+    "activeUsers": "مستخدم نشط",
+    "successfulSignals": "إشارة ناجحة",
+    "avgProfit": "٪ متوسط الربح",
+    "sessionsHeld": "جلسة منعقدة",
+    "entry": "الدخول",
+    "teacher": "المعلم",
+    "viewDetails": "عرض التفاصيل",
+    "signalsCount": "إشارة",
+    "viewAllSessions": "عرض كل الجلسات",
+    "viewAllFaq": "عرض كل الأسئلة"
+  },
+  "blog": {
+    "search": "بحث",
+    "views": "مشاهدة",
+    "comments": "التعليقات",
+    "relatedPosts": "مقالات ذات صلة",
+    "guest": "مستخدم",
+    "notFound": "المقال غير موجود"
+  },
+  "packages": {
+    "all": "الكل",
+    "details": "التفاصيل",
+    "addToCart": "أضف إلى السلة",
+    "notFound": "الباقة غير موجودة",
+    "noAccess": "لا يوجد وصول",
+    "myPackages": "باقاتي"
+  },
+  "about": {
+    "team": "الفريق"
+  },
+  "common": {
+    "more": "المزيد",
+    "continue": "متابعة",
+    "view": "عرض",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "language": "اللغة"
+  },
+  "pages": {
+    "about": "من نحن",
+    "contact": "اتصل بنا",
+    "terms": "الشروط",
+    "blog": "المدونة",
+    "packages": "الباقات",
+    "faq": "الأسئلة الشائعة",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "notFound": "الصفحة غير موجودة",
+    "serverError": "خطأ في الخادم"
+  },
+  "meta": {
+    "description": "ليموتريد — منصة احترافية لتعليم التداول والإشارات المباشرة والاستثمار"
+  }
+}

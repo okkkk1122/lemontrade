@@ -25,4 +25,15 @@ router.get('/menu/:type', async (req, res) => {
 
 router.get('/health', (_, res) => res.json({ ok: true, service: 'lemontrade', nameFa: 'لیموترید' }));
 
+router.get('/locale', (req, res) => {
+  const { LOCALES } = require('../../lib/localize');
+  const locale = req.query?.locale;
+  if (!locale || !LOCALES.includes(locale)) {
+    return res.status(400).send('Invalid locale');
+  }
+  res.cookie('locale', locale, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false, sameSite: 'lax' });
+  if (req.session) req.session.locale = locale;
+  res.redirect(req.query.redirect || req.get('Referer') || '/');
+});
+
 module.exports = router;

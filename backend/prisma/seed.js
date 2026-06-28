@@ -587,6 +587,9 @@ async function main() {
     update: {},
   });
 
+  const { syncI18nContent } = require('./i18n-seed');
+  await syncI18nContent(prisma, demoUser.id);
+
   console.log('✅ Seed complete');
   console.log('   Admin:', admin.email, '/', adminPass);
   console.log('   Teacher: teacher@lemontrade.com / Teacher@12345');

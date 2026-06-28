@@ -1,4 +1,5 @@
 const prisma = require('../lib/prisma');
+const { localizeRows } = require('../lib/localize');
 
 const defaultHeaderMenu = [
   { title: 'خانه', link: '/', sortOrder: 0 },
@@ -10,6 +11,7 @@ const defaultHeaderMenu = [
 ];
 
 async function loadSiteData(req, res, next) {
+  const locale = req.locale || res.locals.locale || 'fa';
   try {
     const [headerMenu, footerMenu, socials] = await Promise.all([
       prisma.menuItem.findMany({
@@ -26,9 +28,9 @@ async function loadSiteData(req, res, next) {
       }),
     ]);
 
-    res.locals.headerMenu =
-      headerMenu.length > 0 ? headerMenu : defaultHeaderMenu.map((m, i) => ({ ...m, id: String(i) }));
-    res.locals.footerMenu = footerMenu;
+    const header = headerMenu.length > 0 ? headerMenu : defaultHeaderMenu.map((m, i) => ({ ...m, id: String(i) }));
+    res.locals.headerMenu = localizeRows(header, ['title'], locale);
+    res.locals.footerMenu = localizeRows(footerMenu, ['title'], locale);
     res.locals.socialLinks = socials;
 
     const s = res.locals.settings || {};
@@ -37,7 +39,7 @@ async function loadSiteData(req, res, next) {
     res.locals.contactAddress = s.supportAddress || 'تهران، ایران';
   } catch (e) {
     console.error('loadSiteData', e);
-    res.locals.headerMenu = defaultHeaderMenu;
+    res.locals.headerMenu = localizeRows(defaultHeaderMenu, ['title'], locale);
     res.locals.footerMenu = [];
     res.locals.socialLinks = [];
     const s = res.locals.settings || {};

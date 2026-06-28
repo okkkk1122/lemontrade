@@ -34,9 +34,16 @@ function clearSettingsCache() {
   cache = null;
 }
 
+function siteNameForLocale(settings, locale) {
+  if (locale === 'en') return settings.siteNameEn || 'Lemontrade';
+  if (locale === 'ar') return settings.siteNameAr || settings.siteName || defaults.siteName;
+  return settings.siteName || defaults.siteName;
+}
+
 async function loadSettings(req, res, next) {
   res.locals.settings = await getSettings();
-  res.locals.siteName = res.locals.settings.siteName || defaults.siteName;
+  const locale = req.locale || res.locals.locale || 'fa';
+  res.locals.siteName = siteNameForLocale(res.locals.settings, locale);
   res.locals.siteNameEn = res.locals.settings.siteNameEn || defaults.siteNameEn;
   next();
 }
